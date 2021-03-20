@@ -1,0 +1,77 @@
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author sabinka
+ */
+public class ReaderFinder 
+{
+    private static final ReaderFinder INSTANCE = new ReaderFinder();
+
+    public static ReaderFinder getINSTANCE() {
+        return INSTANCE;
+    }
+    
+    private ReaderFinder(){}
+    
+    public Reader findById(int id) throws SQLException {
+
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM readers WHERE id = ?")) {
+            s.setInt(1, id);
+
+            try (ResultSet r = s.executeQuery()) {
+                if (r.next()) {
+                    Reader rr = new Reader();
+
+                    rr.setId(r.getInt("id"));
+                    rr.setFirstName(r.getString("first_name"));
+                    rr.setLastName(r.getString("last_name"));
+                    rr.setValidTil(r.getTimestamp("valid_til"));
+
+                    if (r.next()) {
+                        throw new RuntimeException("Move than one row was returned");
+                    }
+
+                    return rr;
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+    
+    public List<Reader> findAll() throws SQLException {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM readers")) {
+            try (ResultSet r = s.executeQuery()) {
+
+                List<Reader> elements = new ArrayList<>();
+
+                while (r.next()) {
+                    Reader rr = new Reader();
+
+                    rr.setId(r.getInt("id"));
+                    rr.setFirstName(r.getString("first_name"));
+                    rr.setLastName(r.getString("last_name"));
+                    rr.setValidTil(r.getTimestamp("valid_til"));
+                    
+                    elements.add(rr);
+                }
+
+                return elements;
+            }
+        }
+    }
+    
+
+}
