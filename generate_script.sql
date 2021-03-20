@@ -1,87 +1,3 @@
-drop table if exists authors cascade;
-create table authors
-(
-    id serial primary key,
-    first_name varchar,
-    last_name varchar
-);
-
-
-drop table if exists books cascade;
-create table books
-(
-    id serial primary key,
-    title varchar
-);
-
-drop table if exists book_authors cascade;
-create table book_authors
-(
-    book_id int references books,
-    author_id int references authors
-);
-
-drop table if exists book_categories cascade;
-create table book_categories
-(
-    id serial primary key,
-    cat_name varchar,
-    period int
-);
-
-
-drop table if exists copies cascade;
-create table copies
-(
-    id serial primary key,
-    book_id int references books,
-    state numeric,
-    available_distantly boolean,
-    in_library boolean,
-    category int references book_categories
-);
-
-drop table if exists readers cascade;
-create table readers
-(
-    id serial primary key,
-    first_name varchar,
-    last_name varchar,
-    valid_til timestamp
-);
-
-
-drop table if exists fees cascade;
-create table fees
-(
-    id serial primary key,
-    reader_id int references readers,
-    amount numeric,
-    closed boolean
-    
-);
-
-drop table if exists reservations cascade;
-create table reservations
-(
-    id serial primary key,
-    date_from timestamp,
-    date_to timestamp,
-    reader_id int references readers,
-    copy_id int references copies
-);
-
-drop table if exists rentals cascade;
-create table rentals
-(
-    id serial primary key,
-    date_from timestamp,
-    date_to timestamp,
-    returned timestamp,
-    reader_id int references readers,
-    copy_id int references copies
-    
-);
 
 
 insert into authors (first_name, last_name)
@@ -292,8 +208,28 @@ $$
 SELECT id from book_categories order by random() limit 1
 $$;
 
-insert into copies (book_id, state, available_distantly, in_library, category)
-select id, (random()*30)+70, case when(random() > 0.7) then true else false end, false, random_cat(id) from books;
+
+insert into stocks (adress)
+	select 
+	case floor(random()*4)
+	when 0 then 'Konvalinkova '
+	when 1 then 'Snezienkova '
+	when 2 then 'Fialkova '
+	when 3 then 'Slnecnicova '
+	end 
+	|| floor(random()*100) || ', Bratislava' as adress
+	from generate_series(1, 10);
+
+
+
+CREATE FUNCTION random_stock(x int) returns table (id int)
+LANGUAGE SQL AS
+$$
+SELECT id from stocks order by random() limit 1
+$$;
+
+insert into copies (book_id, state, available_distantly, in_library, category, stock_id)
+select id, (random()*30)+70, case when(random() > 0.7) then true else false end, false, random_cat(id), random_stock(id) from books;
 
 CREATE FUNCTION random_copy(x int) returns table (id int)
 LANGUAGE SQL AS
@@ -364,4 +300,5 @@ select first_name, last_name, timestamp '2022-01-10 20:00:00' +
 from tmp_readers;
 
 drop table tmp_readers;
+
 
