@@ -35,6 +35,7 @@ create table copies
 (
     id serial primary key,
     book_id int references books,
+    state numeric,
     available_distantly boolean,
     in_library boolean,
     category int references book_categories
@@ -291,8 +292,8 @@ $$
 SELECT id from book_categories order by random() limit 1
 $$;
 
-insert into copies (book_id, available_distantly, in_library, category)
-select id, case when(random() > 0.7) then true else false end, false, random_cat(id) from books;
+insert into copies (book_id, state, available_distantly, in_library, category)
+select id, (random()*30)+70, case when(random() > 0.7) then true else false end, false, random_cat(id) from books;
 
 CREATE FUNCTION random_copy(x int) returns table (id int)
 LANGUAGE SQL AS
@@ -301,8 +302,8 @@ SELECT id from copies order by random() limit 1
 $$;
 
 
-insert into copies (book_id, available_distantly, in_library, category)
-select book_id, available_distantly, in_library, category 
+insert into copies (book_id, state, available_distantly, in_library, category)
+select book_id,(random()*30)+70, available_distantly, in_library, category 
 from (generate_series(1,10) as seq(i) join copies on random() > 0.6);
 
 create table tmp_readers

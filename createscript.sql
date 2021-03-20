@@ -35,6 +35,7 @@ create table copies
 (
     id serial primary key,
     book_id int references books,
+    state numeric,
     available_distantly boolean,
     in_library boolean,
     category int references book_categories
