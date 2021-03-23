@@ -6,6 +6,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -24,25 +25,29 @@ public class MainMenu extends Menu {
 
     @Override
     public void print() {
-        System.out.println("*********************************");
-        System.out.println("* 1. list all the readers       *");
-        System.out.println("* 2. show a reader              *");
-        System.out.println("* 3. add a reader               *");
-        System.out.println("* 4. edit a reader              *");
-        System.out.println("* 5. delete a reader            *");
-        System.out.println("* 7. find book by title         *");
-        System.out.println("* 8. list of books by author    *");
-        System.out.println("* 9. add a book                 *");
-        System.out.println("* 10. edit a book               *");
-        System.out.println("* 11. delete a book             *");
-        System.out.println("* 12. list of copies of a book  *");
-        System.out.println("* 13. add a copy                *");
-        System.out.println("* 14. edit a copy               *");
-        System.out.println("* 15. delete a copy             *");
-        System.out.println("* 16. create a reservation      *");
-        System.out.println("* 100. exit                     *");
-        System.out.println("*********************************");
+        System.out.println("***************************************");
+        System.out.println("* 1. list all the readers             *");
+        System.out.println("* 2. show a reader                    *");
+        System.out.println("* 3. add a reader                     *");
+        System.out.println("* 4. edit a reader                    *");
+        System.out.println("* 5. delete a reader                  *");
+        System.out.println("* 7. find book by title               *");
+        System.out.println("* 8. list of books by author          *");
+        System.out.println("* 9. add a book                       *");
+        System.out.println("* 10. edit a book                     *");
+        System.out.println("* 11. delete a book                   *");
+        System.out.println("* 12. list of copies of a book        *");
+        System.out.println("* 13. add a copy                      *");
+        System.out.println("* 14. edit a copy                     *");
+        System.out.println("* 15. delete a copy                   *");
+        System.out.println("* 16. create a reservation            *");
+        System.out.println("* 17. book availability stats         *");
+        System.out.println("* 18. add/change a category to book   *");
+        System.out.println("* 100. exit                           *");
+        System.out.println("***************************************");
+        
     }
+    
     
     /**
      *
@@ -69,6 +74,8 @@ public class MainMenu extends Menu {
                 case "14":   editACopy(); break;
                 case "15":   deleteACopy(); break;
                 case "16":   createAReservation(); break;
+                case "17":   getBookAvailStats(); break;
+                case "18":   addACategory(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
             }
@@ -120,7 +127,13 @@ public class MainMenu extends Menu {
         //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
         //Date parsedDate = (Date) dateFormat.parse(br.readLine());
         //Timestamp t = new java.sql.Timestamp(parsedDate.getTime()); 
-        r.setValidTil(new Timestamp(System.currentTimeMillis() + (365*24*60*60*1000)));
+        Timestamp t = new Timestamp(System.currentTimeMillis());
+        for(int i=0; i<365; i++) 
+        {
+            t = new Timestamp(t.getTime() + 24*60*60*1000);
+        }
+        r.setValidTil(t);
+        
         
         r.insert();
         
@@ -171,8 +184,7 @@ public class MainMenu extends Menu {
             r.delete();
             System.out.println("The reader has been successfully deleted");
         }
-    }
-    
+    } 
     
     private void findBookByTitle() throws SQLException, IOException
     {
@@ -408,6 +420,38 @@ public class MainMenu extends Menu {
         res.insert();
         
         System.out.println("Book has been succesfully reserved.");
+        
+    }
+
+    private void getBookAvailStats() throws SQLException, IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        // check reader
+        System.out.println("Enter year:");
+        int year = Integer.parseInt(br.readLine());
+        Stats.bookAvailability(year);
+    }
+
+    private void addACategory() throws IOException, SQLException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        System.out.println("Enter copy id:");
+        int bId = Integer.parseInt(br.readLine());
+        
+        Copy b = CopyFinder.getINSTANCE().findById(bId);
+        
+        System.out.println("CATEGORIES:");
+        Category.findAll();
+        
+        System.out.println("\nEnter category id:");
+        int cId = Integer.parseInt(br.readLine());
+        
+        b.setCategory(cId);
+        b.update();
+        
+        System.out.println("Copy category has been succesfully changed.");
         
     }
     
