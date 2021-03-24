@@ -112,17 +112,39 @@ public class Copy
         if (id == null) {
             throw new IllegalStateException("id is not set");
         }
+        
+        if(category == null)
+        {
+            try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE copies SET book_id = ?, state = ?, available_distantly = ?, in_library = ? , stock_id = ?, category = NULL WHERE id = ?")) 
+            {
+                s.setInt(1, bookId);
+                s.setDouble(2, state);
+                s.setBoolean(3, availableDistantly);
+                s.setBoolean(4, inLibrary);
+                s.setInt(5, stockId);
+                s.setInt(6, id);
 
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE copies SET book_id = ?, state = ?, available_distantly = ?, in_library = ? , stock_id = ? WHERE id = ?")) {
-            s.setInt(1, bookId);
-            s.setDouble(2, state);
-            s.setBoolean(3, availableDistantly);
-            s.setBoolean(4, inLibrary);
-            s.setInt(5, stockId);
-            s.setInt(6, id);
+                s.executeUpdate();
+            }
             
-            s.executeUpdate();
         }
+        else
+        {
+            try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE copies SET book_id = ?, state = ?, available_distantly = ?, in_library = ? , stock_id = ?, category = ? WHERE id = ?")) 
+            {
+                s.setInt(1, bookId);
+                s.setDouble(2, state);
+                s.setBoolean(3, availableDistantly);
+                s.setBoolean(4, inLibrary);
+                s.setInt(5, stockId);
+                s.setInt(6, category);
+                s.setInt(7, id);
+
+                s.executeUpdate();
+            }
+            
+        }
+        
     }
     
     public void delete() throws SQLException {
@@ -139,7 +161,7 @@ public class Copy
 
     @Override
     public String toString() {
-        return "Copy{" + "id=" + id + ", bookId=" + bookId + ", state=" + state + ", availableDistantly=" + availableDistantly + ", inLibrary=" + inLibrary + ", stockId=" + stockId + ", category=" + category + '}';
+        return "Copy{" + "id=" + id + ", bookId=" + bookId + ", state=" + state + ", availableDistantly=" + availableDistantly + ", inLibrary=" + inLibrary + ", stockId=" + stockId + ", category=" + (category==0?"null":category) + '}';
     }
 
     

@@ -42,7 +42,8 @@ public class MainMenu extends Menu {
         System.out.println("* 15. delete a copy                   *");
         System.out.println("* 16. create a reservation            *");
         System.out.println("* 17. book availability stats         *");
-        System.out.println("* 18. add/change a category to book   *");
+        System.out.println("* 18. add/change a category of a copy *");
+        System.out.println("* 19. remove category of a copy       *");
         System.out.println("* 100. exit                           *");
         System.out.println("***************************************");
         
@@ -76,6 +77,7 @@ public class MainMenu extends Menu {
                 case "16":   createAReservation(); break;
                 case "17":   getBookAvailStats(); break;
                 case "18":   addACategory(); break;
+                case "19":   removeACategory(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
             }
@@ -441,6 +443,11 @@ public class MainMenu extends Menu {
         int bId = Integer.parseInt(br.readLine());
         
         Copy b = CopyFinder.getINSTANCE().findById(bId);
+        if(b == null)
+        {
+            System.out.println("Copy with this id does not exists");
+            return;
+        }
         
         System.out.println("CATEGORIES:");
         Category.findAll();
@@ -452,6 +459,27 @@ public class MainMenu extends Menu {
         b.update();
         
         System.out.println("Copy category has been succesfully changed.");
+        
+    }
+
+    private void removeACategory() throws SQLException, IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        System.out.println("Enter copy id:");
+        int bId = Integer.parseInt(br.readLine());
+        
+        Copy b = CopyFinder.getINSTANCE().findById(bId);
+        if(b == null)
+        {
+            System.out.println("Copy with this id does not exists");
+            return;
+        }
+      
+        b.setCategory(null);
+        b.update();
+        
+        System.out.println("Copy category has been succesfully removed.");
         
     }
     
