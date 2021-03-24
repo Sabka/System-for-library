@@ -302,3 +302,24 @@ from tmp_readers;
 drop table tmp_readers;
 
 
+CREATE FUNCTION random_reader(x int) returns table (id int)
+LANGUAGE SQL AS
+$$
+SELECT id from readers order by random() limit 1
+$$;
+
+insert into fees (reader_id, amount, closed)
+select random_reader(i), 
+    case floor(random()*3)
+	when 0 then 5
+	when 1 then 10
+	when 2 then 15
+	end ,
+	case floor(random()*2)
+	when 0 then false
+	when 1 then true
+	
+	end 
+from generate_series(1, 10) as seq(i);
+
+
