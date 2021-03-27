@@ -26,25 +26,38 @@ public class MainMenu extends Menu {
     @Override
     public void print() {
         System.out.println("***************************************");
-        System.out.println("* 1. list all the readers             *");
-        System.out.println("* 2. show a reader                    *");
-        System.out.println("* 3. add a reader                     *");
-        System.out.println("* 4. edit a reader                    *");
-        System.out.println("* 5. delete a reader                  *");
-        System.out.println("* 7. find book by title               *");
-        System.out.println("* 8. list of books by author          *");
-        System.out.println("* 9. add a book                       *");
-        System.out.println("* 10. edit a book                     *");
-        System.out.println("* 11. delete a book                   *");
-        System.out.println("* 12. list of copies of a book        *");
-        System.out.println("* 13. add a copy                      *");
-        System.out.println("* 14. edit a copy                     *");
-        System.out.println("* 15. delete a copy                   *");
-        System.out.println("* 16. create a reservation            *");
-        System.out.println("* 17. book availability stats         *");
-        System.out.println("* 18. add/change a category of a copy *");
-        System.out.println("* 19. remove category of a copy       *");
-        System.out.println("* 100. exit                           *");
+        System.out.println("                CRUD                   ");
+        System.out.println("***************************************");
+        System.out.println("  1. list all the readers             ");
+        System.out.println("  2. show a reader                    ");
+        System.out.println("  3. add a reader                     ");
+        System.out.println("  4. edit a reader                    ");
+        System.out.println("  5. delete a reader                  ");
+        System.out.println("  7. find book by title               ");
+        System.out.println("  8. list of books by author          ");
+        System.out.println("  9. add a book                       ");
+        System.out.println("  10. edit a book                     ");
+        System.out.println("  11. delete a book                   ");
+        System.out.println("  12. list of copies of a book        ");
+        System.out.println("  13. add a copy                      ");
+        System.out.println("  14. edit a copy                     ");
+        System.out.println("  15. delete a copy                   ");
+        System.out.println("  16. add/change a category of a copy ");
+        System.out.println("  17. remove category of a copy       ");
+        System.out.println("  18. list of stocks        ");
+        System.out.println("  19. add a stock                  ");
+        System.out.println("  20. edit a stock                     ");
+        System.out.println("  21. delete a stock                   ");
+        System.out.println("\n***************************************");
+        System.out.println("                ZDO                    ");
+        System.out.println("***************************************");
+        System.out.println(" 30. create a reservation            ");
+        System.out.println("\n***************************************");
+        System.out.println("                STATS                  ");
+        System.out.println("***************************************");
+        System.out.println(" 60. book availability stats         ");
+        System.out.println("\n***************************************");
+        System.out.println(" 100. exit                           ");
         System.out.println("***************************************");
         
     }
@@ -74,10 +87,14 @@ public class MainMenu extends Menu {
                 case "13":   addACopy(); break;
                 case "14":   editACopy(); break;
                 case "15":   deleteACopy(); break;
-                case "16":   createAReservation(); break;
-                case "17":   getBookAvailStats(); break;
-                case "18":   addACategory(); break;
-                case "19":   removeACategory(); break;
+                case "30":   createAReservation(); break;
+                case "60":   getBookAvailStats(); break;
+                case "16":   addACategory(); break;
+                case "17":   removeACategory(); break;
+                case "18":   findAllStocks(); break;
+                case "19":   addAStock(); break;
+                case "20":   editAStock(); break;
+                case "21":   deleteAStock(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
             }
@@ -482,6 +499,79 @@ public class MainMenu extends Menu {
         System.out.println("Copy category has been succesfully removed.");
         
     }
+
+    private void findAllStocks() throws SQLException 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StockFinder bf = StockFinder.getINSTANCE();
+     
+        List<Stock> lb = bf.findAll();   
+        if(lb.isEmpty()) System.out.println("No stock found");
+        for(Stock s:lb)
+        {
+            System.out.println(s);
+        }
+    }
+
+    private void addAStock() throws SQLException, IOException 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        Stock b = new Stock();
+        
+        System.out.println("Enter adress:");
+        b.setAdress(br.readLine());
+       
+        b.insert();
+        
+        System.out.println("The stock has been sucessfully added");
+        System.out.print("The stock's id is: ");
+        System.out.println(b.getId());
+    }
+
+    private void editAStock() throws IOException, SQLException 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        System.out.println("Enter a stocks's id:");
+        int bId = Integer.parseInt(br.readLine());
+
+        Stock b = StockFinder.getINSTANCE().findById(bId);
+        
+        if (b == null) {
+            System.out.println("No such stock exists");
+        } else {
+            System.out.println(b);
+
+            System.out.println("Enter adress:");
+            b.setAdress(br.readLine());
+           
+            b.update();
+
+            System.out.println("The stock has been successfully updated");
+        }
+        
+    }
+
+    private void deleteAStock() throws IOException, SQLException 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        System.out.println("Enter a stock's id:");
+        int bId = Integer.parseInt(br.readLine());
+
+        Stock b = StockFinder.getINSTANCE().findById(bId);
+        
+        if (b == null) {
+            System.out.println("No such stock exists");
+        } else {
+            b.delete();
+            System.out.println("The stock has been successfully deleted");
+        }
+        
+    }
+    
+    
     
     
 }

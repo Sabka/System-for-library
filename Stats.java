@@ -43,8 +43,8 @@ public class Stats
     
     public static int averageAvailDays(Book b, int year) throws SQLException
     {
-        //int [] nums = new int [12];
         int sum = 0;
+       
         
         Timestamp t = new Timestamp(year-1900, 0, 1, 0, 0, 0, 0);
         Timestamp nxt;
@@ -72,7 +72,7 @@ public class Stats
         BookFinder bf = BookFinder.getINSTANCE();
         for(Book tmp:bf.findAll())
         {
-            System.out.println(tmp.getId() + " " + averageAvailDays(tmp, year));
+            System.out.println("copy:" + tmp.getId() + " avgAvaiDays:" + averageAvailDays(tmp, year));
         }
     }
     

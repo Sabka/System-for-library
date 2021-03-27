@@ -327,6 +327,17 @@ select t, t + INTERVAL '3 days', random_reader(random()::int), random_copy(rando
 from (select timestamp '2000-01-10 20:00:00' +
        random() * (timestamp '2001-01-20 20:00:00' -
                    timestamp '2000-01-10 10:00:00') as t from generate_series(1, 100) as seq(i)) as tmp2;
+                   
+insert into reservations (date_from, date_to, reader_id, copy_id)
+values
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 1),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 148),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 191),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 275),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 320),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 419),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 465);
+
 
 insert into rentals (date_from, date_to, returned, reader_id, copy_id )
 select t, t + INTERVAL '90 days' , t + INTERVAL '28 days', random_reader(random()::int), random_copy(random()::int)

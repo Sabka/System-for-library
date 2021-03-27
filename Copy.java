@@ -3,6 +3,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import jdk.jfr.Timespan;
 
 public class Copy 
 {
@@ -78,10 +80,11 @@ public class Copy
     public boolean isAvailable() throws SQLException
     {
         int cnt = 0;
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT count(id) FROM copies WHERE id = ? and state > ? and id not in (select copy_id from rentals where returned is null) and id not in (select copy_id from reservations)")) 
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT count(id) FROM copies WHERE id = ? and state > ? and id not in (select copy_id from rentals where returned is null) and id not in (select copy_id from reservations where date_to > ?)")) 
         {
             s.setInt(1, id);
             s.setDouble(2, CRITICAL_STATE);
+            s.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
             try (ResultSet r = s.executeQuery()) 
             {
                 r.next();
