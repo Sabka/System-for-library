@@ -52,6 +52,7 @@ public class MainMenu extends Menu {
         System.out.println("                ZDO                    ");
         System.out.println("***************************************");
         System.out.println(" 30. create a reservation            ");
+       
         System.out.println("\n***************************************");
         System.out.println("                STATS                  ");
         System.out.println("***************************************");
@@ -61,6 +62,7 @@ public class MainMenu extends Menu {
         System.out.println("***************************************");
         
     }
+    
     
     
     /**
@@ -87,14 +89,14 @@ public class MainMenu extends Menu {
                 case "13":   addACopy(); break;
                 case "14":   editACopy(); break;
                 case "15":   deleteACopy(); break;
-                case "30":   createAReservation(); break;
-                case "60":   getBookAvailStats(); break;
                 case "16":   addACategory(); break;
                 case "17":   removeACategory(); break;
                 case "18":   findAllStocks(); break;
                 case "19":   addAStock(); break;
                 case "20":   editAStock(); break;
                 case "21":   deleteAStock(); break;
+                case "30":   createAReservation(); break;
+                case "60":   getBookAvailStats(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
             }
@@ -438,7 +440,8 @@ public class MainMenu extends Menu {
         
         res.insert();
         
-        System.out.println("Book has been succesfully reserved.");
+        //System.out.println("Book has been succesfully reserved.");
+        DeliveryManager.manageReservations(); // magicky presun knih
         
     }
 
@@ -570,6 +573,8 @@ public class MainMenu extends Menu {
         }
         
     }
+
+    
     
     
     

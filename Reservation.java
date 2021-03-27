@@ -18,7 +18,17 @@ public class Reservation
     private Timestamp dateTo;
     private Integer readerId;
     private Integer copyId;
+    private boolean rented;
 
+    public boolean isRented() {
+        return rented;
+    }
+
+    public void setRented(boolean rented) {
+        this.rented = rented;
+    }
+    
+    
     public Integer getId() {
         return id;
     }
@@ -61,7 +71,7 @@ public class Reservation
     
     public void autosetDateTo() throws SQLException
     {
-        int period = 0;
+        /*int period = 0;
         if(copyId == null || dateFrom == null) return;
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT period FROM book_categories WHERE id = ?"))
         {
@@ -80,18 +90,20 @@ public class Reservation
                 }
             }
         }
-        dateTo = new Timestamp(dateFrom.getTime() + (period * 24 * 60 * 60 * 1000));
+        dateTo = new Timestamp(dateFrom.getTime() + (period * 24 * 60 * 60 * 1000));*/
+        dateTo = new Timestamp(dateFrom.getTime() + (3 * 24 * 60 * 60 * 1000));
         
     }
     
     public void insert() throws SQLException 
     {
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO reservations (date_from, date_to, reader_id, copy_id) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) 
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO reservations (date_from, date_to, reader_id, copy_id, rented) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) 
         {
             s.setTimestamp(1, dateFrom);
             s.setTimestamp(2, dateTo);
             s.setInt(3, readerId);
             s.setInt(4, copyId);
+            s.setBoolean(5, rented);
             s.executeUpdate();
 
             try (ResultSet r = s.getGeneratedKeys()) 
@@ -107,16 +119,17 @@ public class Reservation
             throw new IllegalStateException("id is not set");
         }
 
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE reservations SET date_from = ?, date_to = ?, reader_id = ?, copy_id = ? WHERE id = ?")) {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE copies SET date_from = ?, date_to = ?, copy_id = ?, reader_id = ?, rented = ? WHERE id = ?")) {
             s.setTimestamp(1, dateFrom);
             s.setTimestamp(2, dateTo);
-            s.setInt(3, readerId);
-            s.setInt(4, copyId);
-            s.setInt(5, id);
-
+            s.setInt(3, copyId);
+            s.setInt(4, readerId);
+            s.setBoolean(5, rented);
+            s.setInt(6, id);
             s.executeUpdate();
         }
     }
+    
     
     public void delete() throws SQLException {
         if (id == null) {
@@ -132,8 +145,10 @@ public class Reservation
 
     @Override
     public String toString() {
-        return "Reservation{" + "id=" + id + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo + ", readerId=" + readerId + ", copyId=" + copyId + '}';
+        return "Reservation{" + "DEFAULT_PERIOD=" + DEFAULT_PERIOD + ", id=" + id + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo + ", readerId=" + readerId + ", copyId=" + copyId + ", rented=" + rented + '}';
     }
+
+    
     
     
     

@@ -1,5 +1,4 @@
 
-
 insert into authors (first_name, last_name)
 values
 ('Bill', 'McKibben'),
@@ -238,8 +237,8 @@ SELECT id from copies order by random() limit 1
 $$;
 
 
-insert into copies (book_id, state, available_distantly, in_library, category)
-select book_id,(random()*30)+70, available_distantly, in_library, category 
+insert into copies (book_id, state, available_distantly, in_library, category,stock_id)
+select book_id,(random()*30)+70, available_distantly, in_library, category, stock_id 
 from (generate_series(1,10) as seq(i) join copies on random() > 0.6);
 
 create table tmp_readers
@@ -322,21 +321,21 @@ select random_reader(i),
 	end 
 from generate_series(1, 10) as seq(i);
 
-insert into reservations (date_from, date_to, reader_id, copy_id )
-select t, t + INTERVAL '3 days', random_reader(random()::int), random_copy(random()::int)
+insert into reservations (date_from, date_to, reader_id, copy_id, rented)
+select t, t + INTERVAL '3 days', random_reader(random()::int), random_copy(random()::int), false
 from (select timestamp '2000-01-10 20:00:00' +
        random() * (timestamp '2001-01-20 20:00:00' -
                    timestamp '2000-01-10 10:00:00') as t from generate_series(1, 100) as seq(i)) as tmp2;
                    
-insert into reservations (date_from, date_to, reader_id, copy_id)
+insert into reservations (date_from, date_to, reader_id, copy_id, rented)
 values
- (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 1),
- (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 148),
- (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 191),
- (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 275),
- (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 320),
- (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 419),
- (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 465);
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 1, false),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 148, false),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 191, false),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 275, false),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 320, false),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 419, false),
+ (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 465, false);
 
 
 insert into rentals (date_from, date_to, returned, reader_id, copy_id )
@@ -344,4 +343,6 @@ select t, t + INTERVAL '90 days' , t + INTERVAL '28 days', random_reader(random(
 from (select timestamp '2000-01-10 20:00:00' +
        random() * (timestamp '2001-01-20 20:00:00' -
                    timestamp '2000-01-10 10:00:00') as t from generate_series(1, 100) as seq(i)) as tmp2;
+
+
 
