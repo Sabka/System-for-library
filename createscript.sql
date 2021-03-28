@@ -114,7 +114,7 @@ CREATE FUNCTION num(b_id integer) returns table (res bigint)
 LANGUAGE SQL AS
 $$
 select count(*) from
-(select i, is_avail_today(1, i)
+(select i, is_avail_today(b_id, i)
 from generate_series(TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*0, TIMESTAMP '2000-12-31 00:00:00'+ INTERVAL '1 year'*0, INTERVAL '1 day') as seq(i)) as tmp
 where is_avail_today > 0
 $$;
