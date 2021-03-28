@@ -448,8 +448,7 @@ public class MainMenu extends Menu {
     private void getBookAvailStats() throws SQLException, IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        // check reader
+     
         System.out.println("Enter year:");
         int year = Integer.parseInt(br.readLine());
         Stats.bookAvailability(year);

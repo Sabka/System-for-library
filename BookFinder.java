@@ -122,6 +122,17 @@ public class BookFinder
         }
     }
     
+    public int maxIndex() throws SQLException
+    {
+        int res = -1;
+        List<Book> all = BookFinder.getINSTANCE().findAll();
+        for(Book b: all)
+        {
+            res = Math.max(res, b.getId());
+        }
+        return res;
+    }
+    
 
     
 }
