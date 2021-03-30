@@ -76,7 +76,11 @@ public class Copy
     }
     
     
-    
+    /**
+    * isAvailable
+    * return whether this copy is available in current time
+    * @throws SQLException
+    */
     public boolean isAvailable() throws SQLException
     {
         int cnt = 0;

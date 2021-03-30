@@ -5,11 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
@@ -25,6 +20,7 @@ public class ReaderFinder
     
     private ReaderFinder(){}
     
+   
     public Reader findById(int id) throws SQLException {
 
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM readers WHERE id = ?")) {
@@ -73,6 +69,11 @@ public class ReaderFinder
         }
     }
     
+    /**
+    * hasOpenedFees
+    * check whether reader with this id has unpayed fees
+    * @throws SQLException
+    */
     public boolean hasOpenedFees(int id) throws SQLException
     {
         try(PreparedStatement s = DBContext.getConnection().prepareStatement("select sum(amount) from fees where reader_id = ? and closed  = false"))

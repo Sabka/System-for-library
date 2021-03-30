@@ -15,6 +15,12 @@ public class BookFinder
         return INSTANCE;
     }
     
+    /**
+    * checkAvailability 
+    * check whether book with inputId is available in current time
+    * @param inputId is id of a book
+    * @throws SQLException
+    */
     private static boolean checkAvailability(int inputId) throws SQLException
     {
         try(PreparedStatement s = DBContext.getConnection().prepareStatement("select count(id) from copies where book_id = ? and id not in (select copy_id from rentals where returned is null) and id not in (select copy_id from reservations)"))
@@ -30,6 +36,13 @@ public class BookFinder
     
     private BookFinder(){}
     
+    /**
+    * findById
+    * find book by its id
+    * @param id is id of a book
+    * @return object of found Book
+    * @throws SQLException
+    */
     public Book findById(int id) throws SQLException {
 
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM books WHERE id = ?")) {
@@ -53,6 +66,13 @@ public class BookFinder
         }
     }
     
+    /**
+    * findByTitle
+    * find book by its title
+    * @param title of book
+    * @return found Book
+    * @throws SQLException
+    */
     public Book findByTitle(String title) throws SQLException {
 
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM books WHERE title = ?")) {
@@ -76,6 +96,13 @@ public class BookFinder
         }
     }
     
+    /**
+    * findByAuthor
+    * find books by their author
+    * @param authors last name
+    * @return list of Books
+    * @throws SQLException
+    */
     public List<Book> findByAuthor(String authorLastName) throws SQLException {
         
         Integer authorId = 0;
@@ -103,6 +130,13 @@ public class BookFinder
         }
     }
     
+    /**
+    * findAll
+    * find all books in DB
+    * @return list of Books
+    * @throws SQLException
+    */
+    
     public List<Book> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM books")) {
             try (ResultSet r = s.executeQuery()) {
@@ -122,6 +156,12 @@ public class BookFinder
         }
     }
     
+    
+    /**
+    * maxIndex
+    * find maximum id of book in DB
+    * @throws SQLException
+    */
     public int maxIndex() throws SQLException
     {
         int res = -1;

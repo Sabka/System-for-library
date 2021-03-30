@@ -69,6 +69,11 @@ public class Reservation
         this.copyId = copyId;
     }
     
+    /**
+    * autosetDateTo
+    * set dateTo based on dateFrom, dateTo = dateFrom + 3 days
+    * @throws SQLException
+    */
     public void autosetDateTo() throws SQLException
     {
         /*int period = 0;

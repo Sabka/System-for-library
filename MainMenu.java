@@ -116,6 +116,7 @@ public class MainMenu extends Menu {
         {
             System.out.println(tmp);
         }
+        if(lr.isEmpty()) System.out.println("No readers found");
     }
         
         
@@ -144,10 +145,6 @@ public class MainMenu extends Menu {
         r.setFirstName(br.readLine());
         System.out.println("Enter last name:");
         r.setLastName(br.readLine());
-        //System.out.println("Enter date - end of validation :");
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        //Date parsedDate = (Date) dateFormat.parse(br.readLine());
-        //Timestamp t = new java.sql.Timestamp(parsedDate.getTime()); 
         Timestamp t = new Timestamp(System.currentTimeMillis());
         for(int i=0; i<365; i++) 
         {
@@ -300,6 +297,7 @@ public class MainMenu extends Menu {
         {
             System.out.println((tmp.isAvailable()?"avail ":"not avail ") + tmp);
         }
+        if(c.size() == 0) System.out.println("No copy.");
         
     }
 

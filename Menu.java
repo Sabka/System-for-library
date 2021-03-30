@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,28 +10,38 @@ public abstract class Menu {
 
     private boolean exit;
 
-    public void run() throws IOException {
+    public void run() throws IOException 
+    {
         exit = false;
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        while (exit == false) {
+        while (exit == false) 
+        {
             System.out.println();
             print();
             System.out.println();
 
             String line = br.readLine();
-            if (line == null) {
+            if (line == null) 
+            {
                 return;
             }
 
             System.out.println();
 
             handle(line);
+            
+            if(exit != true)
+            {
+                System.out.println("Press enter to continue");
+                br.readLine();
+            }
         }
     }
 
-    public void exit() {
+    public void exit() 
+    {
         exit = true;
     }
 

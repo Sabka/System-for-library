@@ -1,19 +1,17 @@
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author sabinka
  */
 public class DeliveryManager 
 {
+    /**
+    * manageReservations
+    * send all reserved copies to library
+    * @throws SQLException
+    */
     public static void manageReservations() throws SQLException
     {
         ReservationFinder rf = ReservationFinder.getINSTANCE();

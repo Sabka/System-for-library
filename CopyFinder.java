@@ -17,7 +17,14 @@ public class CopyFinder
     
     
     private CopyFinder(){}
+
     
+    /**
+    * findById
+    * @return copy with this id
+    * @param id of a copy
+    * @throws SQLException
+    */
     public Copy findById(int id) throws SQLException {
 
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM copies WHERE id = ?")) {
@@ -47,6 +54,11 @@ public class CopyFinder
         }
     }
     
+    /**
+    * findCopiesOfBook
+    * @return List of copies of book with inputBookId
+    * @throws SQLException
+    */
     public List<Copy> findCopiesOfBook(int inputBookId) throws SQLException {
 
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM copies WHERE book_id = ?")) 
