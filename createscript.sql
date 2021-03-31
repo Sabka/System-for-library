@@ -98,8 +98,6 @@ create table rentals
 create index res_from
 on reservations(date_from);
 
-create index ren_from
-on reservations(date_from);
 
 CREATE FUNCTION is_avail_today(b_id integer, t timestamp without time zone) returns table (num bigint)
 LANGUAGE SQL AS
@@ -110,11 +108,23 @@ select count(*) from copies where book_id = $1 and id not in
 $$;
 
 
-CREATE FUNCTION num(b_id integer) returns table (res bigint)
+CREATE FUNCTION num(b_id integer, year integer) returns table (res bigint)
 LANGUAGE SQL AS
 $$
 select count(*) from
 (select i, is_avail_today(b_id, i)
-from generate_series(TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*0, TIMESTAMP '2000-12-31 00:00:00'+ INTERVAL '1 year'*0, INTERVAL '1 day') as seq(i)) as tmp
+from generate_series(TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*(year-2000), TIMESTAMP '2000-12-31 00:00:00'+ INTERVAL '1 year'*(year-2000), INTERVAL '1 day') as seq(i)) as tmp
 where is_avail_today > 0
 $$;
+
+
+
+
+
+
+
+
+
+
+
+
