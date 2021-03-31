@@ -2,7 +2,7 @@ import java.sql.Connection;
 
 /**
  *
- * @author sabinka
+ * @author  Alexander Šimko, sabinka
  */
 public class DBContext {
     private static Connection connection;

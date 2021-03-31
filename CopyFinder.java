@@ -20,10 +20,8 @@ public class CopyFinder
 
     
     /**
-    * findById
-    * @return copy with this id
-    * @param id of a copy
-    * @throws SQLException
+     * find and return copy with id
+    * @param id id of a copy
     */
     public Copy findById(int id) throws SQLException {
 
@@ -55,9 +53,8 @@ public class CopyFinder
     }
     
     /**
-    * findCopiesOfBook
-    * @return List of copies of book with inputBookId
-    * @throws SQLException
+    * find all copies in DB
+    * @return list of all copies
     */
     public List<Copy> findCopiesOfBook(int inputBookId) throws SQLException {
 
@@ -85,6 +82,4 @@ public class CopyFinder
             }
         }
     }
-    
-    
 }

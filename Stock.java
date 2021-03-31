@@ -25,8 +25,11 @@ public class Stock
         this.adress = adress;
     }
 
-   
-    public void insert() throws SQLException 
+
+    /**
+     * Insert new row to table stocks in DB.
+     */
+    public void insert() throws SQLException
     {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO stocks (adress) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
             s.setString(1, adress);
@@ -38,7 +41,10 @@ public class Stock
             }
         }
     }
-    
+
+    /**
+     * Update row in table stocks in DB.
+     */
     public void update() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");
@@ -50,7 +56,10 @@ public class Stock
             s.executeUpdate();
         }
     }
-    
+
+    /**
+     * Delete row from table stocks in DB.
+     */
     public void delete() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");

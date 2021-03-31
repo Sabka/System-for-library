@@ -17,7 +17,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 
 /**
  *
- * @author sabinka
+ * @author Alexander Šimko, sabinka
  */
 public class Main {
     
@@ -39,23 +39,7 @@ public class Main {
         {
             DBContext.setConnection(c);
             
-            //Reader r = new Reader();
-            //r.setFirstName("robo");
-            //r.setLastName("hood");
-            //r.insert();
-            
-            //ReaderFinder rf = ReaderFinder.getINSTANCE();
-            
-            /*Reader copy = rf.findById(10);
-            System.out.println(copy);
-            
-            List<Reader> lr = rf.findAll();
-            for(Reader tmp:lr)
-            {
-                System.out.println(tmp);
-            }*/
-                
-           
+
             MainMenu mainMenu = new MainMenu();
             mainMenu.run();
   

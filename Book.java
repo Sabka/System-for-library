@@ -27,8 +27,11 @@ public class Book
     public void setTitle(String title) {
         this.title = title;
     }
-    
-    public void insert() throws SQLException 
+
+    /**
+     * Insert new row to table books in DB.
+     */
+    public void insert() throws SQLException
     {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO books (title) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
             s.setString(1, title);
@@ -40,7 +43,10 @@ public class Book
             }
         }
     }
-    
+
+    /**
+     * Update row in table books in DB.
+     */
     public void update() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");
@@ -52,7 +58,10 @@ public class Book
             s.executeUpdate();
         }
     }
-    
+
+    /**
+     * Delete row from table books in DB.
+     */
     public void delete() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");

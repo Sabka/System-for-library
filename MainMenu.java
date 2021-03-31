@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
  *
- * @author sabinka
+ * @author Alexander Šimko, sabinka
  */
 public class MainMenu extends Menu {
 
@@ -107,8 +107,11 @@ public class MainMenu extends Menu {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void listAllReaders() throws SQLException 
+
+    /**
+     * Prints all readers.
+     */
+    private void listAllReaders() throws SQLException
     {
         ReaderFinder rf = ReaderFinder.getINSTANCE();
         List<Reader> lr = rf.findAll();   
@@ -118,8 +121,11 @@ public class MainMenu extends Menu {
         }
         if(lr.isEmpty()) System.out.println("No readers found");
     }
-        
-        
+
+
+    /**
+     * Read id and prints a reader with this id.
+     */
     private void showAReader() throws IOException, SQLException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -136,6 +142,9 @@ public class MainMenu extends Menu {
 
     }
 
+    /**
+     * Read readers atributes and add reader to DB.
+     */
     private void addAReader() throws IOException, SQLException, ParseException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -160,6 +169,9 @@ public class MainMenu extends Menu {
         System.out.println(r.getId());
     }
 
+    /**
+     * Read readers atributes and update reader in DB.
+     */
     private void editAReader() throws IOException, SQLException, ParseException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -188,6 +200,9 @@ public class MainMenu extends Menu {
         }
     }
 
+    /**
+     * Read readers id and delete reader from DB.
+     */
     private void deleteAReader() throws SQLException, IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -202,8 +217,11 @@ public class MainMenu extends Menu {
             r.delete();
             System.out.println("The reader has been successfully deleted");
         }
-    } 
-    
+    }
+
+    /**
+     * Read books title and prints this book atributes.
+     */
     private void findBookByTitle() throws SQLException, IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -217,7 +235,11 @@ public class MainMenu extends Menu {
         }
       
     }
-    
+
+
+    /**
+     * Read books author and prints this book atributes.
+     */
     private void findBookByAuthor() throws SQLException, IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -228,7 +250,11 @@ public class MainMenu extends Menu {
         if(lb.isEmpty()) System.out.println("No book found");
     }
 
-    private void addABook() throws IOException, SQLException 
+
+    /**
+     *  Read books atributes and add it to DB.
+     */
+    private void addABook() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -245,6 +271,10 @@ public class MainMenu extends Menu {
         
     }
 
+
+    /**
+     * Read books atributes and update it in DB.
+     */
     private void editABook() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -269,7 +299,10 @@ public class MainMenu extends Menu {
         
     }
 
-    private void deleteABook() throws SQLException, IOException 
+    /**
+     * Read books id and delete it from DB.
+     */
+    private void deleteABook() throws SQLException, IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -286,7 +319,10 @@ public class MainMenu extends Menu {
         }
     }
 
-    private void findAllCopiesOfBook() throws IOException, SQLException 
+    /**
+     * Read book id and find all copies of book in DB
+     */
+    private void findAllCopiesOfBook() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         CopyFinder cf = CopyFinder.getINSTANCE();
@@ -301,7 +337,11 @@ public class MainMenu extends Menu {
         
     }
 
-    private void addACopy() throws IOException, SQLException 
+
+    /**
+     * Read copy atributes and add it to DB.
+     */
+    private void addACopy() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -324,7 +364,10 @@ public class MainMenu extends Menu {
         
     }
 
-    private void editACopy() throws IOException, SQLException 
+    /**
+     * Read copy atributes and update it in DB.
+     */
+    private void editACopy() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -354,7 +397,11 @@ public class MainMenu extends Menu {
         
     }
 
-    private void deleteACopy() throws IOException, SQLException 
+
+    /**
+     * Read copy id and delete it from DB.
+     */
+    private void deleteACopy() throws IOException, SQLException
     {
        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -370,10 +417,12 @@ public class MainMenu extends Menu {
             System.out.println("The copy has been successfully deleted");
         }
     }
-    
+
+    /**
+     * Read book id and prints all copies of book with their availability
+     */
     private boolean findAllAvailableCopies(int bId) throws SQLException
     {
-
         List <Copy> c = CopyFinder.getINSTANCE().findCopiesOfBook(bId);
         for(Copy tmp: c)
         {
@@ -382,7 +431,10 @@ public class MainMenu extends Menu {
         return c.size() != 0;
         
     }
-    
+
+    /**
+     * Read readers, book and copy arguments and creates a reservation.
+     */
     private void createAReservation() throws IOException, SQLException
     {
         
@@ -443,6 +495,9 @@ public class MainMenu extends Menu {
         
     }
 
+    /**
+     * Read year and prints book availability stats in this year.
+     */
     private void getBookAvailStats() throws SQLException, IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -452,6 +507,9 @@ public class MainMenu extends Menu {
         Stats.bookAvailability(year);
     }
 
+    /**
+     * Read copy id and category id, then adds this category to this copy.
+     */
     private void addACategory() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -479,6 +537,9 @@ public class MainMenu extends Menu {
         
     }
 
+    /**
+     * Read copy id and set its category to null.
+     */
     private void removeACategory() throws SQLException, IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -500,7 +561,11 @@ public class MainMenu extends Menu {
         
     }
 
-    private void findAllStocks() throws SQLException 
+
+    /**
+     * Prints all stocks in DB
+     */
+    private void findAllStocks() throws SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StockFinder bf = StockFinder.getINSTANCE();
@@ -513,7 +578,11 @@ public class MainMenu extends Menu {
         }
     }
 
-    private void addAStock() throws SQLException, IOException 
+
+    /**
+     * Read stock atributes and add it to DB.
+     */
+    private void addAStock() throws SQLException, IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -529,7 +598,10 @@ public class MainMenu extends Menu {
         System.out.println(b.getId());
     }
 
-    private void editAStock() throws IOException, SQLException 
+    /**
+     * Read stock atributes and update it in DB.
+     */
+    private void editAStock() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -553,7 +625,10 @@ public class MainMenu extends Menu {
         
     }
 
-    private void deleteAStock() throws IOException, SQLException 
+    /**
+     * Read stock id and delete it from DB.
+     */
+    private void deleteAStock() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
@@ -570,10 +645,4 @@ public class MainMenu extends Menu {
         }
         
     }
-
-    
-    
-    
-    
-    
 }

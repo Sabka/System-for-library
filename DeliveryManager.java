@@ -8,9 +8,7 @@ import java.sql.Timestamp;
 public class DeliveryManager 
 {
     /**
-    * manageReservations
     * send all reserved copies to library
-    * @throws SQLException
     */
     public static void manageReservations() throws SQLException
     {
@@ -33,12 +31,4 @@ public class DeliveryManager
             
         }
     }
-    
-    public static void manageReturned() throws SQLException
-    {
-        
-    }
-    
-    
-    
 }

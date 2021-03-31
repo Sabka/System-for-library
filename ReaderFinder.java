@@ -19,8 +19,11 @@ public class ReaderFinder
     }
     
     private ReaderFinder(){}
-    
-   
+
+
+    /**
+     * find and return reader by its id
+     */
     public Reader findById(int id) throws SQLException {
 
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM readers WHERE id = ?")) {
@@ -46,7 +49,11 @@ public class ReaderFinder
             }
         }
     }
-    
+
+    /**
+     * find all readers in DB
+     * @return list of found readers
+     */
     public List<Reader> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM readers")) {
             try (ResultSet r = s.executeQuery()) {
@@ -70,9 +77,7 @@ public class ReaderFinder
     }
     
     /**
-    * hasOpenedFees
     * check whether reader with this id has unpayed fees
-    * @throws SQLException
     */
     public boolean hasOpenedFees(int id) throws SQLException
     {

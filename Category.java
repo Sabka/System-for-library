@@ -1,14 +1,12 @@
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 
 /**
  *
  * @author sabinka
  */
+
 public class Category 
 {
     private int id;
@@ -39,8 +37,10 @@ public class Category
         this.period = period;
     }
 
-    
 
+    /**
+     * print all book categories
+     */
     public static void findAll() throws SQLException
     {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM book_categories")) 
@@ -59,16 +59,8 @@ public class Category
         }
     }
     
-    public static void findById()
-    {
-        
-    }
-    
     @Override
     public String toString() {
         return "Category{" + "id=" + id + ", catName=" + catName + ", period=" + period + '}';
     }
-    
-    
-    
 }

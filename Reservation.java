@@ -70,37 +70,17 @@ public class Reservation
     }
     
     /**
-    * autosetDateTo
     * set dateTo based on dateFrom, dateTo = dateFrom + 3 days
-    * @throws SQLException
     */
-    public void autosetDateTo() throws SQLException
+    public void autosetDateTo()
     {
-        /*int period = 0;
-        if(copyId == null || dateFrom == null) return;
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT period FROM book_categories WHERE id = ?"))
-        {
-            s.setInt(1, CopyFinder.getINSTANCE().findById(copyId).getCategory());
-            
-
-            try (ResultSet r = s.executeQuery()) 
-            {
-                if(r.next())
-                {
-                   period = r.getInt("period");
-                }
-                else
-                {
-                    period = DEFAULT_PERIOD;
-                }
-            }
-        }
-        dateTo = new Timestamp(dateFrom.getTime() + (period * 24 * 60 * 60 * 1000));*/
         dateTo = new Timestamp(dateFrom.getTime() + (3 * 24 * 60 * 60 * 1000));
-        
     }
-    
-    public void insert() throws SQLException 
+
+    /**
+     * Insert new row to table reservations in DB.
+     */
+    public void insert() throws SQLException
     {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO reservations (date_from, date_to, reader_id, copy_id, rented) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) 
         {
@@ -118,7 +98,10 @@ public class Reservation
             }
         }
     }
-    
+
+    /**
+     * Update row in table reservations in DB.
+     */
     public void update() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");
@@ -134,8 +117,11 @@ public class Reservation
             s.executeUpdate();
         }
     }
-    
-    
+
+
+    /**
+     * Delete row from table reservations in DB.
+     */
     public void delete() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");
@@ -152,11 +138,4 @@ public class Reservation
     public String toString() {
         return "Reservation{" + "DEFAULT_PERIOD=" + DEFAULT_PERIOD + ", id=" + id + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo + ", readerId=" + readerId + ", copyId=" + copyId + ", rented=" + rented + '}';
     }
-
-    
-    
-    
-    
-
-    
 }

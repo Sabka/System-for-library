@@ -1,4 +1,3 @@
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +14,10 @@ public class StockFinder
     }
  
     private StockFinder(){}
-    
+
+    /**
+     * find and return stock in DB by its id
+     */
     public Stock findById(int id) throws SQLException {
 
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM stocks WHERE id = ?")) {
@@ -38,7 +40,11 @@ public class StockFinder
             }
         }
     }
-    
+
+    /**
+     * find all stocks in DB
+     * @return list of found stocks
+     */
     public List<Stock> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM stocks")) {
             try (ResultSet r = s.executeQuery()) {

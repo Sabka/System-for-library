@@ -1,5 +1,4 @@
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,9 +48,11 @@ public class Reader
         this.validTil = validTil;
     }
 
-    
-    
-    public void insert() throws SQLException 
+
+    /**
+     * Insert new row to table readers in DB.
+     */
+    public void insert() throws SQLException
     {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO readers (first_name, last_name, valid_til) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
             s.setString(1, firstName);
@@ -65,7 +66,10 @@ public class Reader
             }
         }
     }
-    
+
+    /**
+     * Update row in table readers in DB.
+     */
     public void update() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");
@@ -80,7 +84,10 @@ public class Reader
             s.executeUpdate();
         }
     }
-    
+
+    /**
+     * Delete row from table books in DB.
+     */
     public void delete() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");

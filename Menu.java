@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 
 /**
  *
- * @author sabinka
+ * @author Alexander Šimko, sabinka
  */
 public abstract class Menu {
 
@@ -16,7 +16,7 @@ public abstract class Menu {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        while (exit == false) 
+        while (!exit)
         {
             System.out.println();
             print();
@@ -32,7 +32,7 @@ public abstract class Menu {
 
             handle(line);
             
-            if(exit != true)
+            if(!exit)
             {
                 System.out.println("Press enter to continue");
                 br.readLine();

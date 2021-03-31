@@ -14,10 +14,7 @@ public class Stats
 {
     
     /**
-    * bookAvailability
     * print stat about Book availability in this year, for each book in DB
-    * @param stats will be about year
-    * @throws SQLException
     */
     public static void bookAvailability(int year) throws SQLException
     {

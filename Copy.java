@@ -1,10 +1,4 @@
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import jdk.jfr.Timespan;
+import java.sql.*;
 
 public class Copy 
 {
@@ -77,13 +71,11 @@ public class Copy
     
     
     /**
-    * isAvailable
     * return whether this copy is available in current time
-    * @throws SQLException
     */
     public boolean isAvailable() throws SQLException
     {
-        int cnt = 0;
+        int cnt;
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT count(id) FROM copies WHERE id = ? and state > ? and id not in (select copy_id from rentals where returned is null) and id not in (select copy_id from reservations where date_to > ?)")) 
         {
             s.setInt(1, id);
@@ -98,7 +90,10 @@ public class Copy
         return cnt > 0;
     }
 
-    public void insert() throws SQLException 
+    /**
+     * Insert new row to table copies in DB.
+     */
+    public void insert() throws SQLException
     {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO copies (book_id, state, available_distantly, in_library, stock_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             s.setInt(1, bookId);
@@ -114,7 +109,10 @@ public class Copy
             }
         }
     }
-    
+
+    /**
+     * Update row in table copies in DB.
+     */
     public void update() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");
@@ -153,7 +151,10 @@ public class Copy
         }
         
     }
-    
+
+    /**
+     * Delete row from table copies in DB.
+     */
     public void delete() throws SQLException {
         if (id == null) {
             throw new IllegalStateException("id is not set");
@@ -171,10 +172,5 @@ public class Copy
         return "Copy{" + "id=" + id + ", bookId=" + bookId + ", state=" + state + ", availableDistantly=" + availableDistantly + ", inLibrary=" + inLibrary + ", stockId=" + stockId + ", category=" + (category==0?"null":category) + '}';
     }
 
-    
-    
-    
-    
-    
     
 }

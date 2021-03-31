@@ -14,8 +14,12 @@ public class ReservationFinder
     }
  
     private ReservationFinder (){}
-    
-    
+
+
+    /**
+     *  find all reservations in DB
+     * @return list of found reservations
+     */
     public List<Reservation> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations")) {
             try (ResultSet r = s.executeQuery()) {
