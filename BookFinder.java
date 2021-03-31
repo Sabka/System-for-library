@@ -160,19 +160,24 @@ public class BookFinder
     /**
     * maxIndex
     * find maximum id of book in DB
+    * @return maximum id
     * @throws SQLException
     */
     public int maxIndex() throws SQLException
     {
-        int res = -1;
-        List<Book> all = BookFinder.getINSTANCE().findAll();
-        for(Book b: all)
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM books order by id desc limit 1")) 
         {
-            res = Math.max(res, b.getId());
+            try (ResultSet r = s.executeQuery()) 
+            {
+                if(r.next())
+                {
+                    return r.getInt("id");
+                }
+              
+            }
         }
-        return res;
+        return -1;
     }
-    
 
     
 }
