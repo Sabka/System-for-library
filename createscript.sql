@@ -27,7 +27,7 @@ drop table if exists book_authors cascade;
 create table book_authors
 (
     book_id int references books,
-    author_id int references authors
+    author_id int references authors on delete set null
 );
 
 drop table if exists book_categories cascade;
@@ -47,8 +47,8 @@ create table copies
     state numeric,
     available_distantly boolean,
     in_library boolean,
-    category int references book_categories,
-    stock_id int references stocks
+    category int references book_categories on delete set null,
+    stock_id int references stocks on delete set null
 );
 
 drop table if exists readers cascade;
@@ -65,7 +65,7 @@ drop table if exists fees cascade;
 create table fees
 (
     id serial primary key,
-    reader_id int references readers,
+    reader_id int references readers on delete set null,
     amount numeric,
     closed boolean
     
@@ -77,8 +77,8 @@ create table reservations
     id serial primary key,
     date_from timestamp,
     date_to timestamp,
-    reader_id int references readers,
-    copy_id int references copies,
+    reader_id int references readers on delete set null,
+    copy_id int references copies on delete set null,
     rented boolean
 );
 
@@ -89,8 +89,8 @@ create table rentals
     date_from timestamp,
     date_to timestamp,
     returned timestamp,
-    reader_id int references readers,
-    copy_id int references copies
+    reader_id int references readers on delete set null,
+    copy_id int references copies on delete set null
     
 );
 
