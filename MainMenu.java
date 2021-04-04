@@ -708,6 +708,11 @@ public class MainMenu extends Menu {
         r.setRented(true);
         r.update();
         
+        // book will not be in library
+        c.setInLibrary(false);
+        c.update();
+        
+        
         System.out.println("Book has been succesfully rented till " + res.getDateTo() + " . Enjoy reading.");
         
     }
