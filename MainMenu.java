@@ -52,6 +52,8 @@ public class MainMenu extends Menu {
         System.out.println("                ZDO                    ");
         System.out.println("***************************************");
         System.out.println(" 30. create a reservation            ");
+        System.out.println(" 31. get reserved book            ");
+
        
         System.out.println("\n***************************************");
         System.out.println("                STATS                  ");
@@ -96,6 +98,7 @@ public class MainMenu extends Menu {
                 case "20":   editAStock(); break;
                 case "21":   deleteAStock(); break;
                 case "30":   createAReservation(); break;
+                case "31":   getReservedBook(); break;
                 case "60":   getBookAvailStats(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
@@ -525,7 +528,7 @@ public class MainMenu extends Menu {
         }
         
         System.out.println("CATEGORIES:");
-        Category.findAll();
+        CategoryFinder.getINSTANCE().findAll();
         
         System.out.println("\nEnter category id:");
         int cId = Integer.parseInt(br.readLine());
@@ -643,6 +646,69 @@ public class MainMenu extends Menu {
             b.delete();
             System.out.println("The stock has been successfully deleted");
         }
+        
+    }
+
+    private void getReservedBook() throws IOException, SQLException 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        // check reader
+        System.out.println("Enter reader's id:");
+        int readerId = Integer.parseInt(br.readLine());
+        Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
+        if(reader.getValidTil().before(new Timestamp(System.currentTimeMillis())))
+        {
+            System.out.println("Your account is not valid yet.");
+            return;
+        }
+        if(ReaderFinder.getINSTANCE().hasOpenedFees(readerId))
+        {
+            System.out.println("You have unpayed fees.");
+            return;
+        }
+        
+        // reader ok, print his active reservations
+        ReservationFinder.getINSTANCE().findReadersActiveReservations(readerId);
+        
+        
+        // check book and copy
+        
+        System.out.println("\nEnter reservation id:");
+        int rId = Integer.parseInt(br.readLine());
+     
+        Reservation r = ReservationFinder.getINSTANCE().findById(rId);
+        
+        if(r == null) 
+        {
+            System.out.println("Incorrect reservation id.");
+            return;
+        }
+        
+        
+        Copy c = CopyFinder.getINSTANCE().findById(r.getCopyId());
+        
+        if(!c.isInLibrary()) 
+        {
+            System.out.println("Sorry, this copy is not in library yet.");
+            return;   
+        }
+        
+        
+        // everything ok, create rental
+        Rental res = new Rental();
+        res.setCopyId(r.getCopyId());
+        res.setDateFrom(new Timestamp(System.currentTimeMillis()));
+        res.autosetDateTo();
+        res.setReaderId(readerId);
+        
+        res.insert();
+        
+        // update reservation
+        r.setRented(true);
+        r.update();
+        
+        System.out.println("Book has been succesfully rented till " + res.getDateTo() + " . Enjoy reading.");
         
     }
 }

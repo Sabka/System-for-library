@@ -2,6 +2,7 @@
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,4 +45,66 @@ public class ReservationFinder
         }
     }
     
+    /**
+    * find and print active reservation of reader
+    */
+    public void findReadersActiveReservations(int rId) throws SQLException {
+
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations WHERE reader_id = ? and rented = false and date_to >= ?")) {
+            s.setInt(1, rId);
+            s.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+
+            Boolean nejake = false;
+            try (ResultSet r = s.executeQuery()) 
+            {
+                while (r.next()) 
+                {
+                    nejake = true;
+                    Reservation b = new Reservation();
+
+                    b.setId(r.getInt("id"));
+                    b.setDateFrom(r.getTimestamp("date_from"));
+                    b.setDateTo(r.getTimestamp("date_to"));
+                    b.setCopyId(r.getInt("copy_id"));
+                    b.setReaderId(r.getInt("reader_id"));
+                    b.setRented(r.getBoolean("rented"));
+
+                    System.out.println(b);
+                }
+            }
+            if(!nejake)
+            {
+                System.out.println("Reader has no active reservations.");
+            }
+        }
+    }
+    
+    /**
+     *  find reservation by id
+     */
+    public Reservation findById(int id) throws SQLException {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations where id = ?"))
+        {
+            s.setInt(1, id);
+            try (ResultSet r = s.executeQuery()) {
+
+
+                if(r.next()) {
+                    Reservation b = new Reservation();
+
+                    b.setId(r.getInt("id"));
+                    b.setDateFrom(r.getTimestamp("date_from"));
+                    b.setDateTo(r.getTimestamp("date_to"));
+                    b.setCopyId(r.getInt("copy_id"));
+                    b.setReaderId(r.getInt("reader_id"));
+                    b.setRented(r.getBoolean("rented"));
+                    return b;
+
+                }
+
+                return null;
+               
+            }
+        }
+    }
 }

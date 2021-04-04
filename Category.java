@@ -38,26 +38,7 @@ public class Category
     }
 
 
-    /**
-     * print all book categories
-     */
-    public static void findAll() throws SQLException
-    {
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM book_categories")) 
-        {
-            try (ResultSet r = s.executeQuery()) 
-            {
-                while(r.next())
-                {
-                    Category c = new Category();
-                    c.setId(r.getInt("id"));
-                    c.setCatName(r.getString("cat_name"));
-                    c.setPeriod(r.getInt("period"));
-                    System.out.println(c);
-                }
-            }
-        }
-    }
+    
     
     @Override
     public String toString() {
