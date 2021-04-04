@@ -52,7 +52,9 @@ public class MainMenu extends Menu {
         System.out.println("                ZDO                    ");
         System.out.println("***************************************");
         System.out.println(" 30. create a reservation            ");
-        System.out.println(" 31. get reserved book            ");
+        System.out.println(" 31. get reserved book            ");        
+        System.out.println(" 32. return a book            ");
+
 
        
         System.out.println("\n***************************************");
@@ -98,7 +100,8 @@ public class MainMenu extends Menu {
                 case "20":   editAStock(); break;
                 case "21":   deleteAStock(); break;
                 case "30":   createAReservation(); break;
-                case "31":   getReservedBook(); break;
+                case "31":   getReservedBook(); break;                
+                case "32":   returnBook(); break;
                 case "60":   getBookAvailStats(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
@@ -711,6 +714,61 @@ public class MainMenu extends Menu {
         
         
         System.out.println("Book has been succesfully rented till " + res.getDateTo() + " . Enjoy reading.");
+        
+    }
+
+    private void returnBook() throws IOException, SQLException 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        // reader
+        System.out.println("Enter reader's id:");
+        int readerId = Integer.parseInt(br.readLine());
+        Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
+        if(reader == null)
+        {
+            System.out.println("Reader with entered id does not exist");
+            return;
+        }
+        
+        // reader ok, print his active rentals
+        RentalFinder.getINSTANCE().findReadersActiveRentals(readerId);
+        
+        System.out.println("\nEnter rental id:");
+        int rId = Integer.parseInt(br.readLine());
+     
+        Rental r = RentalFinder.getINSTANCE().findById(rId);
+        
+        if(r == null) 
+        {
+            System.out.println("Incorrect rental id.");
+            return;
+        }
+        
+        System.out.println("Enter copy state (percents):");
+        Double state = Double.parseDouble(br.readLine());
+        
+        
+        Copy c = CopyFinder.getINSTANCE().findById(r.getCopyId());
+        
+        if(c.getState() > state)
+        {
+            Double amount = (c.getState() - state) * 1.3;
+            System.out.println("The state of book decreased, reader has new fee to pay: " + amount + "eur");
+            // add fee
+        }
+        
+      
+        // everything ok, update rental
+        r.setReturned(new Timestamp(System.currentTimeMillis()));
+        r.update();
+        
+        
+        // book will not be in library
+        c.setInLibrary(true);
+        c.update();
+        
+        DeliveryManager.manageReturned();
         
     }
 }

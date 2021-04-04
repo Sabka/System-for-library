@@ -31,4 +31,20 @@ public class DeliveryManager
             
         }
     }
+
+    static void manageReturned() throws SQLException 
+    {
+        CopyFinder cf = CopyFinder.getINSTANCE();
+        for(Copy tmp_c : cf.findAll())
+        {
+            if(tmp_c.isInLibrary())
+            {
+                if(tmp_c.isAvailable())
+                {
+                    tmp_c.setInLibrary(false); // magicky presun do skladu
+                    tmp_c.update();
+                }
+            }
+        }
+    }
 }

@@ -45,6 +45,63 @@ public class RentalFinder
         }
     }
     
+    public void findReadersActiveRentals(int rId) throws SQLException
+    {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM rentals WHERE reader_id = ? and returned is null")) {
+            s.setInt(1, rId);
+
+            Boolean nejake = false;
+            try (ResultSet r = s.executeQuery()) 
+            {
+                while (r.next()) 
+                {
+                    nejake = true;
+                    Rental b = new Rental();
+
+                    b.setId(r.getInt("id"));
+                    b.setDateFrom(r.getTimestamp("date_from"));
+                    b.setDateTo(r.getTimestamp("date_to"));
+                    b.setCopyId(r.getInt("copy_id"));
+                    b.setReaderId(r.getInt("reader_id"));
+                    b.setReturned(r.getTimestamp("returned"));
+
+                    System.out.println(b);
+                }
+            }
+            if(!nejake)
+            {
+                System.out.println("Reader has no active rentals.");
+            }
+        }
+    }
+
+    public Rental findById(int rId) throws SQLException 
+    {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM rentals where id = ?")) 
+        {
+            s.setInt(1, rId);
+            try (ResultSet r = s.executeQuery()) 
+            {
+                if(r.next()) {
+                    Rental b = new Rental();
+
+                    b.setId(r.getInt("id"));
+                    b.setDateFrom(r.getTimestamp("date_from"));
+                    b.setDateTo(r.getTimestamp("date_to"));
+                    b.setCopyId(r.getInt("copy_id"));
+                    b.setReaderId(r.getInt("reader_id"));
+                    b.setReturned(r.getTimestamp("returned"));
+                    return b;
+
+                }
+                else
+                {
+                    return null;   
+                }
+            }
+        }
+    }
+
     
     
 }

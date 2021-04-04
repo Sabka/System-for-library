@@ -82,4 +82,32 @@ public class CopyFinder
             }
         }
     }
+    
+    public List<Copy> findAll() throws SQLException
+    {
+        List<Copy> res = new ArrayList();
+        
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM copies")) 
+        {
+
+            try (ResultSet r = s.executeQuery()) 
+            {
+                while(r.next()) 
+                {
+                    Copy b = new Copy();
+
+                    b.setId(r.getInt("id"));
+                    b.setBookId(r.getInt("book_id"));
+                    b.setState(r.getDouble("state"));
+                    b.setAvailableDistantly(r.getBoolean("available_distantly"));
+                    b.setInLibrary(r.getBoolean("in_library"));
+                    b.setStockId(r.getInt("stock_id"));
+                    b.setCategory(r.getInt("category"));
+                    
+                    res.add(b);
+                }
+            }
+        }
+        return res;
+    }
 }
