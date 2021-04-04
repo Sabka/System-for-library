@@ -62,28 +62,29 @@ public class BookFinder
     }
     
     /**
-    * find book by its title
+    * find books by its title
     * @return found Book
     */
-    public Book findByTitle(String title) throws SQLException {
+    public List<Book> findByTitle(String title) throws SQLException {
 
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM books WHERE title = ?")) {
-            s.setString(1, title);
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM books WHERE title similar to '%"+ title +"%'")) {
 
             try (ResultSet r = s.executeQuery()) {
-                if (r.next()) {
+                
+                List<Book> elements = new ArrayList<>();
+                while (r.next()) {
                     Book b = new Book();
 
                     b.setId(r.getInt("id"));
                     b.setTitle(r.getString("title"));
-                    if (r.next()) {
-                        throw new RuntimeException("Move than one row was returned");
-                    }
-                    System.out.println(((checkAvailability(b.getId())?"":"not ")) + "available " + b);
-                    return b;
-                } else {
-                    return null;
+                    elements.add(b);
                 }
+                
+                for(Book tmp:elements)
+                {
+                    System.out.println((checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
+                }
+                return elements;
             }
         }
     }

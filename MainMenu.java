@@ -231,11 +231,8 @@ public class MainMenu extends Menu {
         BookFinder bf = BookFinder.getINSTANCE();
         System.out.println("Enter book title:");
         String title = br.readLine();
-        Book b = bf.findByTitle(title);   
-        if (b == null) 
-        {
-            System.out.println("No such book exists");
-        }
+        List<Book> lb = bf.findByTitle(title);   
+        if(lb.isEmpty()) System.out.println("No book found");
       
     }
 
