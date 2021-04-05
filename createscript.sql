@@ -78,7 +78,7 @@ create table reservations
     date_from timestamp not null,
     date_to timestamp not null,
     reader_id int references readers on delete set null,
-    copy_id int references copies on delete set null,
+    copy_id int references copies on delete cascade,
     rented boolean 
 );
 
@@ -90,7 +90,7 @@ create table rentals
     date_to timestamp not null,
     returned timestamp,
     reader_id int references readers on delete set null,
-    copy_id int references copies on delete set null
+    copy_id int references copies on delete cascade
     
 );
 
