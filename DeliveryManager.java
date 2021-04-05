@@ -1,6 +1,8 @@
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author sabinka
@@ -10,8 +12,9 @@ public class DeliveryManager
     /**
     * send all reserved copies to library
     */
-    public static void manageReservations() throws SQLException
+    public static List<Announcement> manageReservations() throws SQLException
     {
+        List<Announcement> res = new ArrayList();
         ReservationFinder rf = ReservationFinder.getINSTANCE();
         CopyFinder cf = CopyFinder.getINSTANCE();
         for(Reservation r:rf.findAll())
@@ -24,14 +27,22 @@ public class DeliveryManager
                     // magicky presun
                     c.setInLibrary(true);
                     c.update();
-                    System.out.println("Announcement for reader " + r.getReaderId() + ": Copy with id " + c.getId() + " has been delivered to library." );
+                    Announcement a = new Announcement();
+                    a.setReaderId(r.getReaderId());
+                    a.setCopyId(c.getId());
+                    //System.out.println("Announcement for reader " + r.getReaderId() + ": Copy with id " + c.getId() + " has been delivered to library." );
+                    res.add(a);
                 }
                 
             }
             
         }
+        return res;
     }
-
+    
+    /**
+    * send all returned copies to stocks
+    */
     static void manageReturned() throws SQLException 
     {
         CopyFinder cf = CopyFinder.getINSTANCE();

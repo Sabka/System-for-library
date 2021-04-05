@@ -19,7 +19,7 @@ public class BookFinder
     /**
     * check whether any copy of book with inputId is available in current time
     */
-    private static boolean checkAvailability(int inputId) throws SQLException
+    public static boolean checkAvailability(int inputId) throws SQLException
     {
         try(PreparedStatement s = DBContext.getConnection().prepareStatement("select count(id) from copies where book_id = ? and id not in (select copy_id from rentals where returned is null) and id not in (select copy_id from reservations)"))
         {
@@ -79,11 +79,6 @@ public class BookFinder
                     b.setTitle(r.getString("title"));
                     elements.add(b);
                 }
-                
-                for(Book tmp:elements)
-                {
-                    System.out.println((checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
-                }
                 return elements;
             }
         }
@@ -108,11 +103,6 @@ public class BookFinder
                     b.setId(r.getInt("id"));
                     b.setTitle(r.getString("title"));
                     elements.add(b);
-                }
-                
-                for(Book tmp:elements)
-                {
-                    System.out.println((checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
                 }
                 return elements;
             }

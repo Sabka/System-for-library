@@ -14,21 +14,25 @@ public class Stats
 {
     
     /**
-    * print stat about Book availability in this year, for each book in DB
+    * count bookAvailabilityStats and return list of Stat1Rows with counted stats
     */
-    public static void bookAvailability(int year) throws SQLException
+    public static List<Stat1Row> bookAvailability(int year) throws SQLException
     {
         
         PreparedStatement p = DBContext.getConnection().prepareStatement("select distinct(id), num(id, ?) as avail from books");
         p.setInt(1, year);
         ResultSet r = p.executeQuery();
+        
+        List<Stat1Row> res = new ArrayList();
+        
         while(r.next())
         {
-            System.out.println("book:" + r.getInt("id") + " avgAvaiDays:" + r.getInt("avail")/12);
-            
+            Stat1Row tmp = new Stat1Row();
+            tmp.setBookId(r.getInt("id"));
+            tmp.setNumDays(r.getInt("avail"));
+            res.add(tmp);
         }
-        
-    
+        return res;
     }
     
     

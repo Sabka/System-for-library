@@ -45,17 +45,16 @@ public class RentalFinder
         }
     }
     
-    public void findReadersActiveRentals(int rId) throws SQLException
+    public List<Rental> findReadersActiveRentals(int rId) throws SQLException
     {
+        List<Rental> res = new ArrayList();
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM rentals WHERE reader_id = ? and returned is null")) {
             s.setInt(1, rId);
 
-            Boolean nejake = false;
             try (ResultSet r = s.executeQuery()) 
             {
                 while (r.next()) 
                 {
-                    nejake = true;
                     Rental b = new Rental();
 
                     b.setId(r.getInt("id"));
@@ -65,14 +64,12 @@ public class RentalFinder
                     b.setReaderId(r.getInt("reader_id"));
                     b.setReturned(r.getTimestamp("returned"));
 
-                    System.out.println(b);
+                    res.add(b);
                 }
             }
-            if(!nejake)
-            {
-                System.out.println("Reader has no active rentals.");
-            }
+            
         }
+        return res;
     }
 
     public Rental findById(int rId) throws SQLException 

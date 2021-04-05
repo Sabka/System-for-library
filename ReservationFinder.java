@@ -46,10 +46,11 @@ public class ReservationFinder
     }
     
     /**
-    * find and print active reservation of reader
+    * find active reservation of reader
     */
-    public void findReadersActiveReservations(int rId) throws SQLException {
-
+    public List<Reservation> findReadersActiveReservations(int rId) throws SQLException 
+    {
+        List<Reservation> res = new ArrayList();
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations WHERE reader_id = ? and rented = false and date_to >= ?")) {
             s.setInt(1, rId);
             s.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
@@ -69,14 +70,12 @@ public class ReservationFinder
                     b.setReaderId(r.getInt("reader_id"));
                     b.setRented(r.getBoolean("rented"));
 
-                    System.out.println(b);
+                    res.add(b);
                 }
             }
-            if(!nejake)
-            {
-                System.out.println("Reader has no active reservations.");
-            }
+            
         }
+        return res;
     }
     
     /**

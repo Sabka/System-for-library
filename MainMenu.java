@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -149,7 +150,7 @@ public class MainMenu extends Menu {
     }
 
     /**
-     * Read readers atributes and add reader to DB.
+     * Read readers attributes and add reader to DB.
      */
     private void addAReader() throws IOException, SQLException, ParseException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -176,7 +177,7 @@ public class MainMenu extends Menu {
     }
 
     /**
-     * Read readers atributes and update reader in DB.
+     * Read readers attributes and update reader in DB.
      */
     private void editAReader() throws IOException, SQLException, ParseException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -236,12 +237,19 @@ public class MainMenu extends Menu {
         String title = br.readLine();
         List<Book> lb = bf.findByTitle(title);   
         if(lb.isEmpty()) System.out.println("No book found");
+        else
+        {
+            for(Book tmp:lb)
+            {
+                System.out.println((bf.checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
+            }
+        }
       
     }
 
 
     /**
-     * Read books author and prints this book atributes.
+     * Read books author and prints this book attributes.
      */
     private void findBookByAuthor() throws SQLException, IOException
     {
@@ -251,11 +259,18 @@ public class MainMenu extends Menu {
         String name = br.readLine();
         List<Book> lb = bf.findByAuthor(name);   
         if(lb.isEmpty()) System.out.println("No book found");
+        else
+        {
+            for(Book tmp:lb)
+            {
+                System.out.println((bf.checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
+            }
+        }
     }
 
 
     /**
-     *  Read books atributes and add it to DB.
+     *  Read books attributes and add it to DB.
      */
     private void addABook() throws IOException, SQLException
     {
@@ -276,7 +291,7 @@ public class MainMenu extends Menu {
 
 
     /**
-     * Read books atributes and update it in DB.
+     * Read books attributes and update it in DB.
      */
     private void editABook() throws IOException, SQLException
     {
@@ -342,7 +357,7 @@ public class MainMenu extends Menu {
 
 
     /**
-     * Read copy atributes and add it to DB.
+     * Read copy attributes and add it to DB.
      */
     private void addACopy() throws IOException, SQLException
     {
@@ -494,7 +509,11 @@ public class MainMenu extends Menu {
         res.insert();
         
         //System.out.println("Book has been succesfully reserved.");
-        DeliveryManager.manageReservations(); // magicky presun knih
+        List<Announcement> a = DeliveryManager.manageReservations(); // magicky presun knih
+        for(Announcement tmp:a)
+        {
+            System.out.println(a);
+        }
         
     }
 
@@ -507,7 +526,10 @@ public class MainMenu extends Menu {
      
         System.out.println("Enter year:");
         int year = Integer.parseInt(br.readLine());
-        Stats.bookAvailability(year);
+        for(Stat1Row stat:Stats.bookAvailability(year))
+        {
+            System.out.println(stat);
+        }
     }
 
     /**
@@ -528,7 +550,11 @@ public class MainMenu extends Menu {
         }
         
         System.out.println("CATEGORIES:");
-        CategoryFinder.getINSTANCE().findAll();
+        for(Category cat:CategoryFinder.getINSTANCE().findAll())
+        {
+            System.out.println(cat);
+        }
+       
         
         System.out.println("\nEnter category id:");
         int cId = Integer.parseInt(br.readLine());
@@ -669,7 +695,13 @@ public class MainMenu extends Menu {
         }
         
         // reader ok, print his active reservations
-        ReservationFinder.getINSTANCE().findReadersActiveReservations(readerId);
+        
+        List<Reservation> activeRess = ReservationFinder.getINSTANCE().findReadersActiveReservations(readerId);
+        for(Reservation tmp: activeRess)
+        {
+            System.out.println(tmp);
+        }
+        if(activeRess.isEmpty()){ System.out.println("Reader has no active reservations."); return;}
         
         
         // check book and copy
@@ -732,7 +764,12 @@ public class MainMenu extends Menu {
         }
         
         // reader ok, print his active rentals
-        RentalFinder.getINSTANCE().findReadersActiveRentals(readerId);
+        List<Rental> activeRens = RentalFinder.getINSTANCE().findReadersActiveRentals(readerId);
+        for(Rental tmp: activeRens)
+        {
+            System.out.println(tmp);
+        }
+        if(activeRens.isEmpty()) { System.out.println("Reader has no active rentals."); return;}
         
         System.out.println("\nEnter rental id:");
         int rId = Integer.parseInt(br.readLine());
@@ -751,11 +788,16 @@ public class MainMenu extends Menu {
         
         Copy c = CopyFinder.getINSTANCE().findById(r.getCopyId());
         
-        if(c.getState() > state)
+        if((c.getState() - state) > 0.3)
         {
-            Double amount = (c.getState() - state) * 1.3;
-            System.out.println("The state of book decreased, reader has new fee to pay: " + amount + "eur");
-            // add fee
+            Double amount = (c.getState() - state) * Fee.EUROSPERDECRESEDPERCENT;
+            System.out.println("The state of book decreased, reader has new fee to pay.");
+            Fee f = new Fee();
+            f.setReaderId(readerId);
+            f.setAmount(amount);
+            f.setClosed(false);
+            f.insert();
+            System.out.println(f);
         }
         
       
@@ -771,4 +813,5 @@ public class MainMenu extends Menu {
         DeliveryManager.manageReturned();
         
     }
+    
 }

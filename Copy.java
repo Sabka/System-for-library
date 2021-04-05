@@ -117,38 +117,23 @@ public class Copy
         if (id == null) {
             throw new IllegalStateException("id is not set");
         }
-        
-        if(category == null)
-        {
-            try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE copies SET book_id = ?, state = ?, available_distantly = ?, in_library = ? , stock_id = ?, category = NULL WHERE id = ?")) 
-            {
-                s.setInt(1, bookId);
-                s.setDouble(2, state);
-                s.setBoolean(3, availableDistantly);
-                s.setBoolean(4, inLibrary);
-                s.setInt(5, stockId);
-                s.setInt(6, id);
-
-                s.executeUpdate();
-            }
-            
-        }
-        else
-        {
             try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE copies SET book_id = ?, state = ?, available_distantly = ?, in_library = ? , stock_id = ?, category = ? WHERE id = ?")) 
             {
                 s.setInt(1, bookId);
                 s.setDouble(2, state);
                 s.setBoolean(3, availableDistantly);
                 s.setBoolean(4, inLibrary);
-                s.setInt(5, stockId);
-                s.setInt(6, category);
+                
+                if(stockId != 0) s.setInt(5, stockId);
+                else s.setNull(5, Types.INTEGER);
+                
+                if(category == null || category == 0) s.setNull(6, Types.INTEGER);
+                else s.setInt(6, category);
+                
                 s.setInt(7, id);
 
                 s.executeUpdate();
             }
-            
-        }
         
     }
 

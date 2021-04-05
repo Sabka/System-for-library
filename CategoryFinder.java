@@ -2,6 +2,8 @@
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -48,10 +50,11 @@ class CategoryFinder
         
         
     /**
-     * print all book categories
+     * find all book categories
      */
-    public static void findAll() throws SQLException
+    public static List<Category> findAll() throws SQLException
     {
+        List<Category> res = new ArrayList();
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM book_categories")) 
         {
             try (ResultSet r = s.executeQuery()) 
@@ -62,10 +65,11 @@ class CategoryFinder
                     c.setId(r.getInt("id"));
                     c.setCatName(r.getString("cat_name"));
                     c.setPeriod(r.getInt("period"));
-                    System.out.println(c);
+                    res.add(c);
                 }
             }
         }
+        return res;
     }
     
     
