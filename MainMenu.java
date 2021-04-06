@@ -462,6 +462,11 @@ public class MainMenu extends Menu {
         System.out.println("Enter reader's id:");
         int readerId = Integer.parseInt(br.readLine());
         Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
+        if(reader == null)
+        {
+            System.out.println("Incorrect reader's id.");
+            return;
+        }
         if(reader.getValidTil().before(new Timestamp(System.currentTimeMillis())))
         {
             System.out.println("Your account is not valid yet.");
@@ -508,7 +513,8 @@ public class MainMenu extends Menu {
         
         res.insert();
         
-        //System.out.println("Book has been succesfully reserved.");
+        System.out.println("Book has been succesfully reserved.");
+        
         List<Announcement> a = DeliveryManager.manageReservations(); // magicky presun knih
         for(Announcement tmp:a)
         {
@@ -683,6 +689,11 @@ public class MainMenu extends Menu {
         System.out.println("Enter reader's id:");
         int readerId = Integer.parseInt(br.readLine());
         Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
+        if(reader == null)
+        {
+            System.out.println("Incorrect reader's id.");
+            return;
+        }
         if(reader.getValidTil().before(new Timestamp(System.currentTimeMillis())))
         {
             System.out.println("Your account is not valid yet.");
@@ -757,6 +768,7 @@ public class MainMenu extends Menu {
         System.out.println("Enter reader's id:");
         int readerId = Integer.parseInt(br.readLine());
         Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
+       
         if(reader == null)
         {
             System.out.println("Reader with entered id does not exist");
@@ -781,7 +793,7 @@ public class MainMenu extends Menu {
             System.out.println("Incorrect rental id.");
             return;
         }
-        
+         
         System.out.println("Enter copy state (percents):");
         Double state = Double.parseDouble(br.readLine());
         
@@ -792,11 +804,13 @@ public class MainMenu extends Menu {
         {
             Double amount = (c.getState() - state) * Fee.EUROSPERDECRESEDPERCENT;
             System.out.println("The state of book decreased, reader has new fee to pay.");
+            
             Fee f = new Fee();
             f.setReaderId(readerId);
             f.setAmount(amount);
             f.setClosed(false);
             f.insert();
+            
             System.out.println(f);
         }
         
@@ -808,6 +822,7 @@ public class MainMenu extends Menu {
         
         // book will not be in library
         c.setInLibrary(true);
+        c.setState(state);
         c.update();
         
         DeliveryManager.manageReturned();

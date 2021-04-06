@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 
 /**
  *
@@ -110,8 +111,13 @@ public class Reservation
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE reservations SET date_from = ?, date_to = ?, copy_id = ?, reader_id = ?, rented = ? WHERE id = ?")) {
             s.setTimestamp(1, dateFrom);
             s.setTimestamp(2, dateTo);
-            s.setInt(3, copyId);
-            s.setInt(4, readerId);
+            
+            if(copyId == 0 || copyId == null) s.setNull(3, Types.INTEGER);
+            else s.setInt(3, copyId);
+            
+            if(readerId == 0 || readerId == null) s.setNull(4, Types.INTEGER);
+            else s.setInt(4, readerId);
+            
             s.setBoolean(5, rented);
             s.setInt(6, id);
             s.executeUpdate();

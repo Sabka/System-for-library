@@ -26,7 +26,7 @@ create table books
 drop table if exists book_authors cascade;
 create table book_authors
 (
-    book_id int references books,
+    book_id int references books on delete cascade,
     author_id int references authors on delete set null
 );
 
@@ -43,7 +43,7 @@ drop table if exists copies cascade;
 create table copies
 (
     id serial primary key,
-    book_id int references books,
+    book_id int references books on delete cascade,
     state numeric not null,
     available_distantly boolean not null,
     in_library boolean not null,

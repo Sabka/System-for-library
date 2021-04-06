@@ -341,12 +341,9 @@ insert into reservations (date_from, date_to, reader_id, copy_id, rented)
 insert into reservations (date_from, date_to, reader_id, copy_id, rented)
 	values
 	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 1, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 148, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 191, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 275, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 320, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 419, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 465, false);
+	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 150, false),
+	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 284, false),
+	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 504, false);
 
 
 insert into rentals (date_from, date_to, returned, reader_id, copy_id )
