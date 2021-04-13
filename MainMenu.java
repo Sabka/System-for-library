@@ -55,9 +55,7 @@ public class MainMenu extends Menu {
         System.out.println(" 30. create a reservation            ");
         System.out.println(" 31. get reserved book            ");        
         System.out.println(" 32. return a book            ");
-
-
-       
+        System.out.println(" 33. check not returned books            ");
         System.out.println("\n***************************************");
         System.out.println("                STATS                  ");
         System.out.println("***************************************");
@@ -103,6 +101,7 @@ public class MainMenu extends Menu {
                 case "30":   createAReservation(); break;
                 case "31":   getReservedBook(); break;                
                 case "32":   returnBook(); break;
+                case "33":   makeFeesForNotReturned(); break;
                 case "60":   getBookAvailStats(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
@@ -827,6 +826,26 @@ public class MainMenu extends Menu {
         
         DeliveryManager.manageReturned();
         
+    }
+
+    public void makeFeesForNotReturned() throws IOException, SQLException 
+    {
+       
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            
+            // reader
+        System.out.println("Enter date:");
+        String ts = br.readLine();
+        Timestamp t = Timestamp.valueOf(ts);
+
+        List<FeeAnnouncement> annList = FeeMaker.feesForNotReturnedCopies(t);
+
+        annList.forEach(ann -> {
+            System.out.println(ann);
+        });
+        
+        System.out.println("All rental dates had been successfully checked.");
+
     }
     
 }
