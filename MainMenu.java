@@ -15,8 +15,10 @@ import java.util.List;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 /**
  *
  * @author Alexander Šimko, sabinka
@@ -55,7 +57,8 @@ public class MainMenu extends Menu {
         System.out.println(" 30. create a reservation            ");
         System.out.println(" 31. get reserved book            ");        
         System.out.println(" 32. return a book            ");
-        System.out.println(" 33. check not returned books            ");
+        System.out.println(" 33. check not returned books            ");        
+        System.out.println(" 34. pay fees            ");
         System.out.println("\n***************************************");
         System.out.println("                STATS                  ");
         System.out.println("***************************************");
@@ -102,6 +105,7 @@ public class MainMenu extends Menu {
                 case "31":   getReservedBook(); break;                
                 case "32":   returnBook(); break;
                 case "33":   makeFeesForNotReturned(); break;
+                case "34":   payFees(); break;
                 case "60":   getBookAvailStats(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
@@ -848,6 +852,71 @@ public class MainMenu extends Menu {
         
         System.out.println("All rental dates had been successfully checked.");
 
+    }
+
+    private void payFees() throws IOException, SQLException 
+    {
+         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        // reader
+        System.out.println("Enter reader's id:");
+        int readerId = Integer.parseInt(br.readLine());
+        Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
+       
+        if(reader == null)
+        {
+            System.out.println("Reader with entered id does not exist");
+            return;
+        }
+        
+        // his fees
+        List<Fee> readersFees = FeeFinder.getINSTANCE().findUnpayedByReaderID(readerId);
+        if(readersFees.isEmpty())
+        {
+            System.out.println("Reader with entered id has no unpayed fees");
+            return;
+            
+        }
+        
+        for(Fee f:readersFees)
+        {
+            System.out.println(f);
+        }
+        
+        // paying
+        System.out.println("Enter comma separated fee ids");
+        List<Integer> fIds = Arrays.asList(br.readLine().split(",")).stream().map(x -> Integer.parseInt(x)).collect(Collectors.toList());
+        int sum = 0;
+        readersFees = readersFees.stream().filter(f -> fIds.contains(f.getId())).collect(Collectors.toList());
+        for(Fee f: readersFees) sum += f.getAmount();
+        if(readersFees.isEmpty())
+        {
+            System.out.println("No ids were entered.");
+            return;
+            
+        }
+        System.out.println("The complete sum to pay:" + sum + "euros");
+        
+        // confirmation
+        System.out.println("Please confirm, the fees were payed. T -> payed,F -> unpayed");
+        String confirmation = br.readLine();
+        if(confirmation.trim().equals("T"))
+        {
+            // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO zaplatenie v db
+            System.out.println("Fees were not payed.");
+            
+        }
+        else if(confirmation.trim().equals("F"))
+        {
+            System.out.println("Fees were not payed.");
+            return;
+        }
+        else
+        {
+            System.out.println("Wrong confirmation.");
+            return;
+        }
+        
     }
     
 }
