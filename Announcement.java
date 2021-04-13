@@ -13,6 +13,13 @@ public class Announcement
     private int readerId;
     private int copyId;
 
+    public Announcement(int readerId, int copyId) {
+        this.readerId = readerId;
+        this.copyId = copyId;
+    }
+    
+    public Announcement() {}
+    
     public int getReaderId() {
         return readerId;
     }
@@ -31,7 +38,7 @@ public class Announcement
 
     @Override
     public String toString() {
-        return "Announcement for reader " + getReaderId() + ": Copy with id " + getCopyId() + " has been delivered to library.";
+        return "[[Announcement for reader " + getReaderId() + ": Copy with id " + getCopyId() + " has been delivered to library.]]";
     }
     
     

@@ -514,6 +514,8 @@ public class MainMenu extends Menu {
         
         System.out.println("Book has been succesfully reserved.");
         
+        if(c.isInLibrary()) System.out.println(new Announcement(readerId, cId).toString());
+        
         List<Announcement> a = DeliveryManager.manageReservations(); // magicky presun knih
         for(Announcement tmp:a)
         {
