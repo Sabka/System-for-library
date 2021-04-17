@@ -66,21 +66,27 @@ public class Stats
             }
             list.add(tmp);
         }
-        System.out.println(list);
+        
+        
         // create output
         IntStream.range(1, n+1).forEach(d ->
                 { 
                     Stats2Row tmp = new Stats2Row();
                     tmp.setX(d);
                     
-                    Stats2Row predloha = new Stats2Row(0, 0, 0.0);
+                    double am = 0.0;
+                    int num = 0;
                     for(Stats2Row l : list)
                     {
-                        if(l.x <= d) predloha = l;
+                        if(l.x <= d)
+                        {
+                            am += l.getAmount();
+                            num += l.getNumFees();
+                        }
                     }
                     
-                    tmp.setAmount(predloha.getAmount());
-                    tmp.setNumFees(predloha.getNumFees());
+                    tmp.setAmount(am);
+                    tmp.setNumFees(num);
                         
                     res.add(tmp);
                 });

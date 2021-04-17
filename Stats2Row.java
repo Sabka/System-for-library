@@ -50,7 +50,7 @@ class Stats2Row
 
     @Override
     public String toString() {
-        return "added days=" + x + ", number of created fees=" + numFees + ", amount=" + amount;
+        return "added days=" + x + ", number of fees=" + numFees + ", amount=" + amount;
     }
     
     
