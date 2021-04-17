@@ -3,6 +3,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 
 /**
  *
@@ -11,7 +12,7 @@ import java.sql.Statement;
 public class Fee 
 {
     public static final double EUROSPERDECRESEDPERCENT = 1.3;
-    private int id;
+    private Integer id;
     private int readerId;
     private double amount;
     private boolean closed;
@@ -65,11 +66,38 @@ public class Fee
             }
         } 
     }
+    
+    /**
+     * Update row in table reservations in DB.
+     */
+    public void update() throws SQLException {
+        if (id == null) 
+        {
+            throw new IllegalStateException("id is not set");
+        }
 
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE fees SET reader_id = ?, amount = ?, closed = ? WHERE id = ?")) {
+            s.setInt(1, readerId);
+            s.setDouble(2, amount);
+            s.setBoolean(3, closed);
+            s.setInt(4, id);
+            s.executeUpdate();
+        }
+    }
+    
+    void pay() throws SQLException 
+    {
+        closed = true;
+        update();
+    }
+    
+    
     @Override
     public String toString() {
         return "Fee{" + "id=" + id + ", readerId=" + readerId + ", amount=" + amount + ", closed=" + closed + '}';
     }
+
+    
     
     
     

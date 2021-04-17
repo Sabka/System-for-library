@@ -902,8 +902,8 @@ public class MainMenu extends Menu {
         String confirmation = br.readLine();
         if(confirmation.trim().equals("T"))
         {
-            // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO zaplatenie v db
-            System.out.println("Fees were not payed.");
+            for(Fee f: readersFees) f.pay();
+            System.out.println("Fees were succesfully payed.");
             
         }
         else if(confirmation.trim().equals("F"))
