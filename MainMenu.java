@@ -63,6 +63,7 @@ public class MainMenu extends Menu {
         System.out.println("                STATS                  ");
         System.out.println("***************************************");
         System.out.println(" 60. book availability stats         ");
+        System.out.println(" 61. delay stats         ");
         System.out.println("\n***************************************");
         System.out.println(" 100. exit                           ");
         System.out.println("***************************************");
@@ -107,6 +108,7 @@ public class MainMenu extends Menu {
                 case "33":   makeFeesForNotReturned(); break;
                 case "34":   payFees(); break;
                 case "60":   getBookAvailStats(); break;
+                case "61":   delayStats(); break;
                 case "100":   exit(); break;
                 default:    System.out.println("Unknown option"); break;
             }
@@ -917,6 +919,19 @@ public class MainMenu extends Menu {
             return;
         }
         
+    }
+
+    private void delayStats() throws IOException, SQLException 
+    {
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        System.out.println("Enter N.");
+        int n = Integer.parseInt(br.readLine());
+        List<Stats2Row> lines = Stats.getDelayStats(n);
+        lines.forEach(line -> {
+            System.out.println(line);
+        });
     }
     
 }
