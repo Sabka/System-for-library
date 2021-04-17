@@ -106,7 +106,7 @@ $$
         	and id not in (select copy_id from rentals where date_from <= $2 and returned is null);
 $$;
 
-drop function if exists num;
+drop function if exists num(integer, integer);
 CREATE FUNCTION num(b_id integer, year integer) returns table (res bigint) LANGUAGE SQL AS
 $$
 	select count(*)
@@ -118,15 +118,4 @@ $$
 			INTERVAL '1 day') as seq(i)) as tmp
 	where is_avail_today > 0
 $$;
-
-
-
-
-
-
-
-
-
-
-
 

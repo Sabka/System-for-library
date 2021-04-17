@@ -1,33 +1,35 @@
+
+
 drop function if exists random_author;
 CREATE FUNCTION random_author(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from authors order by random() limit 1
+	SELECT id from authors tablesample system_rows(15) order by random() limit 1
 $$;
 
 
 drop function if exists random_cat;
 CREATE FUNCTION random_cat(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from book_categories order by random() limit 1
+	SELECT id from book_categories tablesample system_rows(15) order by random() limit 1
 $$;
 
 drop function if exists random_stock;
 CREATE FUNCTION random_stock(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from stocks order by random() limit 1
+	SELECT id from stocks tablesample system_rows(15) order by random() limit 1
 $$;
 
 
 drop function if exists random_copy;
 CREATE FUNCTION random_copy(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from copies order by random() limit 1
+	SELECT id from copies tablesample system_rows(15) order by random() limit 1
 $$;
 
 drop function if exists random_reader;
 CREATE FUNCTION random_reader(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from readers order by random() limit 1
+	SELECT id from readers tablesample system_rows(15) order by random() limit 1
 $$;
 
 create table tmp_readers
@@ -80,6 +82,8 @@ values
 	('Kati', 'Rulapaugh' ),
 	('Youlanda', 'Schemmer' ),
 	('Dyan', 'Oldroyd' );
+	
+
 
 insert into authors (first_name, last_name)
 values
@@ -282,32 +286,36 @@ insert into book_categories (cat_name, period)
 	select cat_name,  ((Random() * 90)+ 35)::int
 	from tmp_book_categories;
 
+drop table tmp_book_categories;
+
+insert into book_categories (cat_name, period)
+	select 'cat'|| i,  ((Random() * 90)+ 35)::int
+	from generate_series(1, 5000) as seq(i);
+
 
 insert into stocks (adress)
 	select 
-	case floor(random()*4)
+	case floor(random()*10)
 	when 0 then 'Konvalinkova '
 	when 1 then 'Snezienkova '
 	when 2 then 'Fialkova '
 	when 3 then 'Slnecnicova '
+	else 'ulica' || floor(random()*i)
 	end 
 	|| floor(random()*100) || ', Bratislava' as adress
-	from generate_series(1, 10);
+	from generate_series(1, 200) as seq(i);
 
 
 
 insert into book_authors (book_id, author_id)
 	select id, random_author(id) from books;
 
+insert into book_authors (book_id, author_id)
+	select tmp.id, random_author(id) from (select * from books order by random() limit 15) as tmp;
+
 
 insert into copies (book_id, state, available_distantly, in_library, category, stock_id)
 	select id, (random()*30)+70, case when(random() > 0.7) then true else false end, false, random_cat(id), random_stock(id) from books;
-
-
-insert into copies (book_id, state, available_distantly, in_library, category,stock_id)
-	select book_id,(random()*30)+70, available_distantly, in_library, category, stock_id 
-	from (generate_series(1,10) as seq(i) join copies on random() > 0.6);
-
 
 
 insert into readers (first_name, last_name, valid_til)
@@ -315,6 +323,10 @@ insert into readers (first_name, last_name, valid_til)
 	from tmp_readers;
 
 drop table tmp_readers;
+
+insert into readers (first_name, last_name, valid_til)
+select 'janko'||i, 'hrasko'||i, timestamp '2022-01-10 20:00:00' + random() * (timestamp '2025-01-20 20:00:00' - timestamp '2022-01-10 10:00:00')
+	from generate_series(1, 5000) as seq(i);
 
 
 
@@ -328,29 +340,28 @@ insert into fees (reader_id, amount, closed)
 		case floor(random()*2)
 		when 0 then false
 		when 1 then true
-		
 		end 
-	from generate_series(1, 10) as seq(i);
+	from generate_series(1, 1000) as seq(i);
 
 insert into reservations (date_from, date_to, reader_id, copy_id, rented)
 	select t, t + INTERVAL '3 days', random_reader(random()::int), random_copy(random()::int), false
 	from (select timestamp '2000-01-10 20:00:00' +
 	       random() * (timestamp '2001-01-20 20:00:00' -
-		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 100) as seq(i)) as tmp2;
+		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 1000) as seq(i)) as tmp2;
 		           
-insert into reservations (date_from, date_to, reader_id, copy_id, rented)
-	values
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 1, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 150, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 284, false),
-	 (TIMESTAMP '2000-01-01 00:00:00', TIMESTAMP '2000-12-04 00:00:00', 12, 504, false);
-
 
 insert into rentals (date_from, date_to, returned, reader_id, copy_id )
 	select t, t + INTERVAL '90 days' , t + INTERVAL '28 days', random_reader(random()::int), random_copy(random()::int)
 	from (select timestamp '2000-01-10 20:00:00' +
 	       random() * (timestamp '2001-01-20 20:00:00' -
-		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 100) as seq(i)) as tmp2;
+		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 1000) as seq(i)) as tmp2;
+
+
+
+
+
+
+
 
 
 
