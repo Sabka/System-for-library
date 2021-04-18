@@ -1,34 +1,37 @@
 
+
+
+
 drop function if exists random_author;
 CREATE FUNCTION random_author(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from authors tablesample system_rows(15) order by random() limit 1
+	SELECT id from authors tablesample system_rows(30) order by random() limit 1
 $$;
 
 
 drop function if exists random_cat;
 CREATE FUNCTION random_cat(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from book_categories tablesample system_rows(15) order by random() limit 1
+	SELECT id from book_categories tablesample system_rows(30) order by random() limit 1
 $$;
 
 drop function if exists random_stock;
 CREATE FUNCTION random_stock(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from stocks tablesample system_rows(15) order by random() limit 1
+	SELECT id from stocks tablesample system_rows(30) order by random() limit 1
 $$;
 
 
 drop function if exists random_copy;
 CREATE FUNCTION random_copy(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from copies tablesample system_rows(15) order by random() limit 1
+	SELECT id from copies tablesample system_rows(30) order by random() limit 1
 $$;
 
 drop function if exists random_reader;
 CREATE FUNCTION random_reader(x int) returns table (id int) LANGUAGE SQL AS
 $$
-	SELECT id from readers tablesample system_rows(15) order by random() limit 1
+	SELECT id from readers tablesample system_rows(30) order by random() limit 1
 $$;
 
 create table tmp_readers
@@ -128,6 +131,9 @@ values
 	('Peter', 'Straub'),
 	('Phillip', 'Lopate');
 
+insert into authors (first_name, last_name)
+select 'auth_name'||i, 'auth_surname'||i
+from generate_series(1, 1500) as seq(i);
 
 insert into books (title)
 values
@@ -237,6 +243,10 @@ values
 	('The Outlaw Bible of American Literature'),
 	('Mother California: A Story of Redemption Behind Bars');
 
+insert into books(title)
+select 'title'||i
+from generate_series(1, 5000) as seq(i);
+
 
 create table tmp_book_categories
 (
@@ -319,7 +329,7 @@ insert into copies (book_id, state, available_distantly, in_library, category, s
 
 insert into copies (book_id, state, available_distantly, in_library, category, stock_id)
     select c.id, (random()*30)+70, case when(random() > 0.7) then true else false end, false, random_cat(id), random_stock(id) 
-    from copies c join generate_series(1, 1000) as seq(i) on random()>0.8;
+    from copies c join generate_series(1, 20) as seq(i) on random()>0.7;
 
 
 insert into readers (first_name, last_name, valid_til)
@@ -359,10 +369,3 @@ insert into rentals (date_from, date_to, returned, reader_id, copy_id )
 	from (select timestamp '2000-01-10 20:00:00' +
 	       random() * (timestamp '2001-01-20 20:00:00' -
 		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 100000) as seq(i)) as tmp2;
-
-
-
-
-
-
-
