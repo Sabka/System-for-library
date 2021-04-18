@@ -1,7 +1,4 @@
 
-
-
-
 drop function if exists random_author;
 CREATE FUNCTION random_author(x int) returns table (id int) LANGUAGE SQL AS
 $$
@@ -333,13 +330,13 @@ insert into copies (book_id, state, available_distantly, in_library, category, s
 
 
 insert into readers (first_name, last_name, valid_til)
-	select first_name, last_name, timestamp '2000-01-10 20:00:00' + random() * (timestamp '2025-01-20 20:00:00' - timestamp '2000-01-10 10:00:00')
+	select first_name, last_name, timestamp '2021-01-10 20:00:00' + random() * (timestamp '2025-01-20 20:00:00' - timestamp '2021-01-10 10:00:00')
 	from tmp_readers;
 
 drop table tmp_readers;
 
 insert into readers (first_name, last_name, valid_til)
-select 'janko'||i, 'hrasko'||i, timestamp '2000-01-10 20:00:00' + random() * (timestamp '2025-01-20 20:00:00' - timestamp '2000-01-10 10:00:00')
+select 'janko'||i, 'hrasko'||i, timestamp '2021-01-10 20:00:00' + random() * (timestamp '2025-01-20 20:00:00' - timestamp '2021-01-10 10:00:00')
 	from generate_series(1, 5000) as seq(i);
 
 
@@ -360,12 +357,12 @@ insert into fees (reader_id, amount, closed)
 insert into reservations (date_from, date_to, reader_id, copy_id, rented)
 	select t, t + INTERVAL '3 days', random_reader(random()::int), random_copy(random()::int), false
 	from (select timestamp '2000-01-10 20:00:00' +
-	       random() * (timestamp '2001-01-20 20:00:00' -
-		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 100000) as seq(i)) as tmp2;
+	       random() * (timestamp '2021-01-20 20:00:00' -
+		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 1000000) as seq(i)) as tmp2;
 		           
 
 insert into rentals (date_from, date_to, returned, reader_id, copy_id )
 	select t, t + INTERVAL '90 days' , t + INTERVAL '28 days', random_reader(random()::int), random_copy(random()::int)
 	from (select timestamp '2000-01-10 20:00:00' +
-	       random() * (timestamp '2001-01-20 20:00:00' -
-		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 100000) as seq(i)) as tmp2;
+	       random() * (timestamp '2021-01-20 20:00:00' -
+		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 1000000) as seq(i)) as tmp2;
