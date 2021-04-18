@@ -26,8 +26,8 @@ create table books
 drop table if exists book_authors cascade;
 create table book_authors
 (
-    book_id int references books on delete cascade,
-    author_id int references authors on delete set null
+    book_id int references books on delete cascade on update cascade,
+    author_id int references authors on delete set null on update set null
 );
 
 drop table if exists book_categories cascade;
@@ -43,12 +43,12 @@ drop table if exists copies cascade;
 create table copies
 (
     id serial primary key,
-    book_id int references books on delete cascade,
+    book_id int references books on delete cascade on update cascade,
     state numeric not null,
     available_distantly boolean not null,
     in_library boolean not null,
-    category int references book_categories on delete set null,
-    stock_id int references stocks on delete set null
+    category int references book_categories on delete set null on update set null,
+    stock_id int references stocks on delete set null  on update set null
 );
 
 drop table if exists readers cascade;
@@ -65,7 +65,7 @@ drop table if exists fees cascade;
 create table fees
 (
     id serial primary key,
-    reader_id int references readers on delete set null,
+    reader_id int references readers on delete set null  on update set null,
     amount numeric not null,
     closed boolean
     
@@ -77,8 +77,8 @@ create table reservations
     id serial primary key,
     date_from timestamp not null,
     date_to timestamp not null,
-    reader_id int references readers on delete set null,
-    copy_id int references copies on delete cascade,
+    reader_id int references readers on delete set null  on update set null,
+    copy_id int references copies on delete cascade  on update cascade,
     rented boolean 
 );
 
@@ -89,8 +89,8 @@ create table rentals
     date_from timestamp not null,
     date_to timestamp not null,
     returned timestamp,
-    reader_id int references readers on delete set null,
-    copy_id int references copies on delete cascade
+    reader_id int references readers on delete set null  on update set null,
+    copy_id int references copies on delete cascade  on update cascade
     
 );
 
