@@ -1,4 +1,11 @@
+package RDG;
 
+
+import MAIN.DBContext;
+import RDG.Category;
+import RDG.CopyFinder;
+import RDG.Copy;
+import RDG.CategoryFinder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

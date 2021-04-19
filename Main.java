@@ -1,3 +1,6 @@
+package MAIN;
+
+import UI.MainMenu;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;

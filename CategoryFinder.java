@@ -1,4 +1,7 @@
+package RDG;
 
+
+import MAIN.DBContext;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +13,7 @@ import java.util.List;
  *
  * @author sabinka
  */
-class CategoryFinder
+public class CategoryFinder
 {
     private static final CategoryFinder  INSTANCE = new CategoryFinder ();
 

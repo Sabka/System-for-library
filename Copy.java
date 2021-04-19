@@ -1,3 +1,6 @@
+package RDG;
+
+import MAIN.DBContext;
 import java.sql.*;
 
 public class Copy 
@@ -76,7 +79,7 @@ public class Copy
     public boolean isAvailable() throws SQLException
     {
         int cnt;
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT count(id) FROM copies WHERE id = ? and state > ? and id not in (select copy_id from rentals where returned is null) and id not in (select copy_id from reservations where date_to > ? and rented != true)")) 
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT count(id) FROM copies WHERE id = ? and available_distantly = true and state > ? and id not in (select copy_id from rentals where returned is null) and id not in (select copy_id from reservations where date_to > ? and rented != true)")) 
         {
             s.setInt(1, id);
             s.setDouble(2, CRITICAL_STATE);

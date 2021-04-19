@@ -1,9 +1,16 @@
+package UI;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
+import TS.ResRenManager;
+import STATS.*;
+import TS.*;
+import RDG.*;
+import UI.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -146,9 +153,12 @@ public class MainMenu extends Menu {
 
         Reader r = ReaderFinder.getINSTANCE().findById(rId);
         
-        if (r == null) {
+        if (!InputChecker.checkReader(rId)) 
+        {
             System.out.println("No such reader exists");
-        } else {
+        } 
+        else 
+        {
             System.out.println(r);
         }
 
@@ -157,22 +167,22 @@ public class MainMenu extends Menu {
     /**
      * Read readers attributes and add reader to DB.
      */
-    private void addAReader() throws IOException, SQLException, ParseException {
+    private void addAReader() throws IOException, SQLException, ParseException 
+    {
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         Reader r = new Reader();
         
         System.out.println("Enter first name:");
         r.setFirstName(br.readLine());
+        
         System.out.println("Enter last name:");
         r.setLastName(br.readLine());
-        Timestamp t = new Timestamp(System.currentTimeMillis());
-        for(int i=0; i<365; i++) 
-        {
-            t = new Timestamp(t.getTime() + 24*60*60*1000);
-        }
-        r.setValidTil(t);
         
+        Timestamp t = new Timestamp(System.currentTimeMillis());
+        t = InputChecker.getLaterTimestamp(t, 365);
+        r.setValidTil(t);
         
         r.insert();
         
@@ -192,30 +202,37 @@ public class MainMenu extends Menu {
 
         Reader r = ReaderFinder.getINSTANCE().findById(rId);
         
-        if (r == null) {
+        if (!InputChecker.checkReader(rId)) 
+        {
             System.out.println("No such reader exists");
-        } else {
-            System.out.println(r);
+            return;
+        } 
+        
+        System.out.println(r);
 
-            System.out.println("Enter first name:");
-            r.setFirstName(br.readLine());
-            System.out.println("Enter last name:");
-            r.setLastName(br.readLine());
-            System.out.println("Enter date - end of validation :");
-            String ts = br.readLine();
-            Timestamp t = Timestamp.valueOf(ts);
-            r.setValidTil(t);
+        System.out.println("Enter first name:");
+        r.setFirstName(br.readLine());
+        
+        System.out.println("Enter last name:");
+        r.setLastName(br.readLine());
+        
+        System.out.println("Enter date - end of validation :");
+        String ts = br.readLine();
+        
+        Timestamp t = Timestamp.valueOf(ts);
+        r.setValidTil(t);
 
-            r.update();
+        r.update();
 
-            System.out.println("The reader has been successfully updated");
-        }
+        System.out.println("The reader has been successfully updated");
+        
     }
 
     /**
      * Read readers id and delete reader from DB.
      */
-    private void deleteAReader() throws SQLException, IOException {
+    private void deleteAReader() throws SQLException, IOException 
+    {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         System.out.println("Enter a reader's id:");
@@ -223,12 +240,15 @@ public class MainMenu extends Menu {
 
         Reader r = ReaderFinder.getINSTANCE().findById(rId);
         
-        if (r == null) {
+        if (!InputChecker.checkReader(rId)) 
+        {
             System.out.println("No such reader exists");
-        } else {
-            r.delete();
-            System.out.println("The reader has been successfully deleted");
-        }
+            return;
+        } 
+        
+        r.delete();
+        System.out.println("The reader has been successfully deleted");
+        
     }
 
     /**
@@ -259,6 +279,7 @@ public class MainMenu extends Menu {
     private void findBookByAuthor() throws SQLException, IOException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
         BookFinder bf = BookFinder.getINSTANCE();
         System.out.println("Enter a author's last name:");
         String name = br.readLine();
@@ -307,18 +328,20 @@ public class MainMenu extends Menu {
 
         Book b = BookFinder.getINSTANCE().findById(bId);
         
-        if (b == null) {
+        if (!InputChecker.checkBook(bId))
+        {
             System.out.println("No such book exists");
-        } else {
-            System.out.println(b);
+            return;
+        } 
+        
+        System.out.println(b);
 
-            System.out.println("Enter title:");
-            b.setTitle(br.readLine());
-           
-            b.update();
+        System.out.println("Enter title:");
+        b.setTitle(br.readLine());
 
-            System.out.println("The book has been successfully updated");
-        }
+        b.update();
+
+        System.out.println("The book has been successfully updated");
         
     }
 
@@ -334,12 +357,14 @@ public class MainMenu extends Menu {
 
         Book b = BookFinder.getINSTANCE().findById(bId);
         
-        if (b == null) {
+        if (!InputChecker.checkBook(bId)) 
+        {
             System.out.println("No such book exists");
-        } else {
-            b.delete();
-            System.out.println("The book has been successfully deleted");
         }
+        
+        b.delete();
+        System.out.println("The book has been successfully deleted");
+        
     }
 
     /**
@@ -348,6 +373,7 @@ public class MainMenu extends Menu {
     private void findAllCopiesOfBook() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
         CopyFinder cf = CopyFinder.getINSTANCE();
         System.out.println("Enter book id:");
         int bId = Integer.parseInt(br.readLine());
@@ -356,7 +382,7 @@ public class MainMenu extends Menu {
         {
             System.out.println((tmp.isAvailable()?"avail ":"not avail ") + tmp);
         }
-        if(c.size() == 0) System.out.println("No copy.");
+        if(c.isEmpty()) System.out.println("No copy.");
         
     }
 
@@ -372,13 +398,34 @@ public class MainMenu extends Menu {
         
         System.out.println("Enter book_id:");
         b.setBookId(Integer.parseInt(br.readLine()));
+        
+        if (!InputChecker.checkBook(b.getBookId())) 
+        {
+            System.out.println("No such book exists");
+            return;
+        }
+        
         System.out.println("Enter state:");
         b.setState(Double.parseDouble(br.readLine()));
+        
+        if(!InputChecker.checkPercentage(b.getState()))
+        {
+            System.out.println("State from invalid range");
+            return;
+        }
+        
         System.out.println("Enter true/false if copy is available distantly:");
         b.setAvailableDistantly(Boolean.parseBoolean(br.readLine()));
+        
         System.out.println("Enter id of default stock:");
         b.setStockId(Integer.parseInt(br.readLine()));
-    
+        
+        if(!InputChecker.checkStock(b.getStockId()))
+        {
+            System.out.println("No such stock exists");
+            return;
+        }
+        
         b.insert();
         
         System.out.println("The copy has been sucessfully added");
@@ -388,7 +435,7 @@ public class MainMenu extends Menu {
     }
 
     /**
-     * Read copy atributes and update it in DB.
+     * Read copy attributes and update it in DB.
      */
     private void editACopy() throws IOException, SQLException
     {
@@ -399,25 +446,46 @@ public class MainMenu extends Menu {
 
         Copy b = CopyFinder.getINSTANCE().findById(bId);
         
-        if (b == null) {
+        if (!InputChecker.checkCopy(bId)) 
+        {
             System.out.println("No such copy exists");
-        } else {
-            System.out.println(b);
-
-            System.out.println("Enter book_id:");
-            b.setBookId(Integer.parseInt(br.readLine()));
-            System.out.println("Enter state:");
-            b.setState(Double.parseDouble(br.readLine()));
-            System.out.println("Enter true/false if copy is available distantly:");
-            b.setAvailableDistantly(Boolean.parseBoolean(br.readLine()));
-            System.out.println("Enter id of default stock:");
-            b.setStockId(Integer.parseInt(br.readLine()));
-
-            b.update();
-
-            System.out.println("The copy has been successfully updated");
+            return;
         }
         
+        System.out.println(b);
+
+        System.out.println("Enter book_id:");
+        b.setBookId(Integer.parseInt(br.readLine()));
+        if (!InputChecker.checkBook(b.getBookId())) 
+        {
+            System.out.println("No such book exists");
+            return;
+        }
+        
+        System.out.println("Enter state:");
+        b.setState(Double.parseDouble(br.readLine()));
+        if(!InputChecker.checkPercentage(b.getState()))
+        {
+        System.out.println("State from invalid range");
+        return;
+        }
+        
+        System.out.println("Enter true/false if copy is available distantly:");
+        b.setAvailableDistantly(Boolean.parseBoolean(br.readLine()));
+        
+        System.out.println("Enter id of default stock:");
+        b.setStockId(Integer.parseInt(br.readLine()));
+        
+        if(!InputChecker.checkStock(b.getStockId()))
+        {
+            System.out.println("No such stock exists");
+            return;
+        }
+        
+        b.update();
+
+        System.out.println("The copy has been successfully updated");
+
     }
 
 
@@ -431,29 +499,20 @@ public class MainMenu extends Menu {
         System.out.println("Enter a copy's id:");
         int bId = Integer.parseInt(br.readLine());
 
-        Copy b = CopyFinder.getINSTANCE().findById(bId);
         
-        if (b == null) {
+        if (!InputChecker.checkCopy(bId)) 
+        {
             System.out.println("No such copy exists");
-        } else {
-            b.delete();
-            System.out.println("The copy has been successfully deleted");
-        }
+            return;
+        } 
+        
+        Copy b = CopyFinder.getINSTANCE().findById(bId);
+        b.delete();
+        System.out.println("The copy has been successfully deleted");
+        
     }
 
-    /**
-     * Read book id and prints all copies of book with their availability
-     */
-    private boolean findAllAvailableCopies(int bId) throws SQLException
-    {
-        List <Copy> c = CopyFinder.getINSTANCE().findCopiesOfBook(bId);
-        for(Copy tmp: c)
-        {
-            System.out.println((tmp.isAvailable()?"avail ":"not avail ") + tmp);
-        }
-        return c.size() != 0;
-        
-    }
+    
 
     /**
      * Read readers, book and copy arguments and creates a reservation.
@@ -463,70 +522,44 @@ public class MainMenu extends Menu {
         
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
-        // check reader
+       
         System.out.println("Enter reader's id:");
         int readerId = Integer.parseInt(br.readLine());
-        Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
-        if(reader == null)
-        {
-            System.out.println("Incorrect reader's id.");
-            return;
-        }
-        if(reader.getValidTil().before(new Timestamp(System.currentTimeMillis())))
-        {
-            System.out.println("Your account is not valid yet.");
-            return;
-        }
-        if(ReaderFinder.getINSTANCE().hasOpenedFees(readerId))
-        {
-            System.out.println("You have unpayed fees.");
-            return;
-        }
+     
         
-        // check book and copy
         System.out.println("Enter book id:");
         int bId = Integer.parseInt(br.readLine());
         
-        if(!findAllAvailableCopies(bId))
-        {
-           System.out.println("Sorry, there is no available copy of this book.");
-           return;
-        }
         
-        System.out.println("Enter copy's id:");
-        int cId = Integer.parseInt(br.readLine());
-     
-        Copy c = CopyFinder.getINSTANCE().findById(cId);
-        if(!c.isAvailable())
-           {
-            System.out.println("Sorry, this copy is not available.");
+        //create reservation
+        int id = -1;
+        try
+        {
+            id = ResRenManager.createReservation(readerId, bId);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
             return;
         }
         
-        if(!c.isAvailableDistantly())
-        {
-            System.out.println("Sorry, this copy cant be reserved (not available distantly).");
-            return;
-        }
+        System.out.println("Copy "+ id +" has been succesfully reserved.");
         
-        // everything ok, create reservation
-        Reservation res = new Reservation();
-        res.setCopyId(cId);
-        res.setDateFrom(new Timestamp(System.currentTimeMillis()));
-        res.autosetDateTo();
-        res.setReaderId(readerId);
+        // prines knihy do kniznice a vypis oznamenia
+        deliverBooks();        
         
-        res.insert();
-        
-        System.out.println("Book has been succesfully reserved.");
-        
-        if(c.isInLibrary()) System.out.println(new Announcement(readerId, cId).toString());
-        
+    }
+    
+    /**
+     * Deliver books and print announcements for readers.
+     */
+    private void deliverBooks() throws SQLException
+    {
         List<Announcement> a = DeliveryManager.manageReservations(); // magicky presun knih
-        for(Announcement tmp:a)
+        a.forEach(_item -> 
         {
             System.out.println(a);
-        }
+        });
         
     }
 
@@ -555,8 +588,7 @@ public class MainMenu extends Menu {
         System.out.println("Enter copy id:");
         int bId = Integer.parseInt(br.readLine());
         
-        Copy b = CopyFinder.getINSTANCE().findById(bId);
-        if(b == null)
+        if(!InputChecker.checkCopy(bId))
         {
             System.out.println("Copy with this id does not exists");
             return;
@@ -568,10 +600,16 @@ public class MainMenu extends Menu {
             System.out.println(cat);
         }
        
-        
         System.out.println("\nEnter category id:");
         int cId = Integer.parseInt(br.readLine());
+        if(!InputChecker.checkCat(cId))
+        {
+            System.out.println("Invalid category id.");
+            return;
+            
+        }
         
+        Copy b = CopyFinder.getINSTANCE().findById(bId);
         b.setCategory(cId);
         b.update();
         
@@ -589,13 +627,14 @@ public class MainMenu extends Menu {
         System.out.println("Enter copy id:");
         int bId = Integer.parseInt(br.readLine());
         
-        Copy b = CopyFinder.getINSTANCE().findById(bId);
-        if(b == null)
+        
+        if(!InputChecker.checkCopy(bId))
         {
             System.out.println("Copy with this id does not exists");
             return;
         }
-      
+        
+        Copy b = CopyFinder.getINSTANCE().findById(bId);
         b.setCategory(null);
         b.update();
         
@@ -614,15 +653,15 @@ public class MainMenu extends Menu {
      
         List<Stock> lb = bf.findAll();   
         if(lb.isEmpty()) System.out.println("No stock found");
-        for(Stock s:lb)
+        lb.forEach(o -> 
         {
-            System.out.println(s);
-        }
+            System.out.println(o);
+        });
     }
 
 
     /**
-     * Read stock atributes and add it to DB.
+     * Read stock attributes and add it to DB.
      */
     private void addAStock() throws SQLException, IOException
     {
@@ -649,21 +688,23 @@ public class MainMenu extends Menu {
         
         System.out.println("Enter a stocks's id:");
         int bId = Integer.parseInt(br.readLine());
-
-        Stock b = StockFinder.getINSTANCE().findById(bId);
-        
-        if (b == null) {
+ 
+        if (!InputChecker.checkStock(bId)) 
+        {
             System.out.println("No such stock exists");
-        } else {
-            System.out.println(b);
-
-            System.out.println("Enter adress:");
-            b.setAdress(br.readLine());
-           
-            b.update();
-
-            System.out.println("The stock has been successfully updated");
+            return;
         }
+        
+        Stock b = StockFinder.getINSTANCE().findById(bId);
+        System.out.println(b);
+
+        System.out.println("Enter adress:");
+        b.setAdress(br.readLine());
+
+        b.update();
+
+        System.out.println("The stock has been successfully updated");
+       
         
     }
 
@@ -676,15 +717,17 @@ public class MainMenu extends Menu {
         
         System.out.println("Enter a stock's id:");
         int bId = Integer.parseInt(br.readLine());
-
-        Stock b = StockFinder.getINSTANCE().findById(bId);
         
-        if (b == null) {
+        if (!InputChecker.checkStock(bId)) 
+        {
             System.out.println("No such stock exists");
-        } else {
-            b.delete();
-            System.out.println("The stock has been successfully deleted");
+            return;
         }
+        
+        Stock b = StockFinder.getINSTANCE().findById(bId);
+
+        b.delete();
+        System.out.println("The stock has been successfully deleted");
         
     }
 
@@ -692,78 +735,37 @@ public class MainMenu extends Menu {
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
-        // check reader
+       
         System.out.println("Enter reader's id:");
         int readerId = Integer.parseInt(br.readLine());
-        Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
-        if(reader == null)
-        {
-            System.out.println("Incorrect reader's id.");
-            return;
-        }
-        if(reader.getValidTil().before(new Timestamp(System.currentTimeMillis())))
-        {
-            System.out.println("Your account is not valid yet.");
-            return;
-        }
-        if(ReaderFinder.getINSTANCE().hasOpenedFees(readerId))
-        {
-            System.out.println("You have unpayed fees.");
-            return;
-        }
         
-        // reader ok, print his active reservations
-        
+        // print active reservations
         List<Reservation> activeRess = ReservationFinder.getINSTANCE().findReadersActiveReservations(readerId);
-        for(Reservation tmp: activeRess)
+        activeRess.forEach(tmp -> 
         {
             System.out.println(tmp);
+        });
+        if(activeRess.isEmpty())
+        {
+            System.out.println("Reader has no active reservations."); 
+            return;
         }
-        if(activeRess.isEmpty()){ System.out.println("Reader has no active reservations."); return;}
-        
-        
-        // check book and copy
         
         System.out.println("\nEnter reservation id:");
         int rId = Integer.parseInt(br.readLine());
      
-        Reservation r = ReservationFinder.getINSTANCE().findById(rId);
-        
-        if(r == null) 
+        Timestamp tmp = null;
+        try
         {
-            System.out.println("Incorrect reservation id.");
+            tmp = ResRenManager.getReservedBooks(readerId, rId);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
             return;
         }
         
-        
-        Copy c = CopyFinder.getINSTANCE().findById(r.getCopyId());
-        
-        if(!c.isInLibrary()) 
-        {
-            System.out.println("Sorry, this copy is not in library yet.");
-            return;   
-        }
-        
-        
-        // everything ok, create rental
-        Rental res = new Rental();
-        res.setCopyId(r.getCopyId());
-        res.setDateFrom(new Timestamp(System.currentTimeMillis()));
-        res.autosetDateTo();
-        res.setReaderId(readerId);
-        
-        res.insert();
-        
-        // update reservation
-        r.setRented(true);
-        r.update();
-        
-        // book will not be in library
-        c.setInLibrary(false);
-        c.update();
-        
-        
-        System.out.println("Book has been succesfully rented till " + res.getDateTo() + " . Enjoy reading.");
+        System.out.println("Book has been succesfully rented till " + tmp + " . Enjoy reading.");
         
     }
 
@@ -774,63 +776,39 @@ public class MainMenu extends Menu {
         // reader
         System.out.println("Enter reader's id:");
         int readerId = Integer.parseInt(br.readLine());
-        Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
-       
-        if(reader == null)
-        {
-            System.out.println("Reader with entered id does not exist");
-            return;
-        }
-        
-        // reader ok, print his active rentals
+      
+        // print his active rentals
         List<Rental> activeRens = RentalFinder.getINSTANCE().findReadersActiveRentals(readerId);
         for(Rental tmp: activeRens)
         {
             System.out.println(tmp);
         }
-        if(activeRens.isEmpty()) { System.out.println("Reader has no active rentals."); return;}
+        if(activeRens.isEmpty()) 
+        { 
+            System.out.println("Reader has no active rentals."); 
+            return;
+        }
         
         System.out.println("\nEnter rental id:");
         int rId = Integer.parseInt(br.readLine());
      
-        Rental r = RentalFinder.getINSTANCE().findById(rId);
-        
-        if(r == null) 
+         
+        System.out.println("Enter copy state (%):");
+        Double state = Double.parseDouble(br.readLine());
+       
+        Fee f = null;
+        try
         {
-            System.out.println("Incorrect rental id.");
+            f = ResRenManager.returnBook(readerId, rId, state);
+            if(f != null) System.out.println(f);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
             return;
         }
-         
-        System.out.println("Enter copy state (percents):");
-        Double state = Double.parseDouble(br.readLine());
         
-        
-        Copy c = CopyFinder.getINSTANCE().findById(r.getCopyId());
-        
-        if((c.getState() - state) > 0.3)
-        {
-            Double amount = (c.getState() - state) * Fee.EUROSPERDECRESEDPERCENT;
-            System.out.println("The state of book decreased, reader has new fee to pay.");
-            
-            Fee f = new Fee();
-            f.setReaderId(readerId);
-            f.setAmount(amount);
-            f.setClosed(false);
-            f.insert();
-            
-            System.out.println(f);
-        }
-        
-      
-        // everything ok, update rental
-        r.setReturned(new Timestamp(System.currentTimeMillis()));
-        r.update();
-        
-        
-        // book will not be in library
-        c.setInLibrary(true);
-        c.setState(state);
-        c.update();
+        System.out.println("Book has been succesfully returned.");
         
         DeliveryManager.manageReturned();
         
@@ -841,14 +819,14 @@ public class MainMenu extends Menu {
        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             
-            // reader
         System.out.println("Enter date:");
         String ts = br.readLine();
         Timestamp t = Timestamp.valueOf(ts);
 
-        List<FeeAnnouncement> annList = FeeMaker.feesForNotReturnedCopies(t);
+        List<FeeAnnouncement> annList = FeeManager.feesForNotReturnedCopies(t);
 
-        annList.forEach(ann -> {
+        annList.forEach(ann -> 
+        {
             System.out.println(ann);
         });
         
@@ -856,21 +834,14 @@ public class MainMenu extends Menu {
 
     }
 
-    private void payFees() throws IOException, SQLException 
+    private void payFees() throws IOException, SQLException
     {
-         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         // reader
         System.out.println("Enter reader's id:");
         int readerId = Integer.parseInt(br.readLine());
-        Reader reader = ReaderFinder.getINSTANCE().findById(readerId);
-       
-        if(reader == null)
-        {
-            System.out.println("Reader with entered id does not exist");
-            return;
-        }
-        
+      
         // his fees
         List<Fee> readersFees = FeeFinder.getINSTANCE().findUnpayedByReaderID(readerId);
         if(readersFees.isEmpty())
@@ -888,36 +859,38 @@ public class MainMenu extends Menu {
         // paying
         System.out.println("Enter comma separated fee ids");
         List<Integer> fIds = Arrays.asList(br.readLine().split(",")).stream().map(x -> Integer.parseInt(x)).collect(Collectors.toList());
-        int sum = 0;
-        readersFees = readersFees.stream().filter(f -> fIds.contains(f.getId())).collect(Collectors.toList());
-        for(Fee f: readersFees) sum += f.getAmount();
-        if(readersFees.isEmpty())
+        
+        double sum;
+        try
         {
-            System.out.println("No ids were entered.");
-            return;
-            
+            sum = FeeManager.countSum(readersFees, fIds);
         }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+            return;
+        }
+        
         System.out.println("The complete sum to pay:" + sum + "euros");
         
         // confirmation
         System.out.println("Please confirm, the fees were payed. T -> payed,F -> unpayed");
         String confirmation = br.readLine();
-        if(confirmation.trim().equals("T"))
+        switch (confirmation.trim()) 
         {
-            for(Fee f: readersFees) f.pay();
-            System.out.println("Fees were succesfully payed.");
-            
+            case "T":
+                for(Fee f: readersFees) f.pay();
+                System.out.println("Fees were succesfully payed.");
+                break;
+            case "F":
+                System.out.println("Fees were not payed.");
+                break;
+            default:
+                System.out.println("Wrong confirmation.");
+                break;
         }
-        else if(confirmation.trim().equals("F"))
-        {
-            System.out.println("Fees were not payed.");
-            return;
-        }
-        else
-        {
-            System.out.println("Wrong confirmation.");
-            return;
-        }
+        
+        FeeManager.payFees(FeeManager.validFees(readersFees, fIds));
         
     }
 
@@ -929,7 +902,8 @@ public class MainMenu extends Menu {
         System.out.println("Enter N.");
         int n = Integer.parseInt(br.readLine());
         List<Stats2Row> lines = Stats.getDelayStats(n);
-        lines.forEach(line -> {
+        lines.forEach(line -> 
+        {
             System.out.println(line);
         });
     }

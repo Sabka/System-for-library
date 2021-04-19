@@ -1,4 +1,11 @@
+package TS;
 
+
+import STATS.Announcement;
+import RDG.ReservationFinder;
+import RDG.Reservation;
+import RDG.CopyFinder;
+import RDG.Copy;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,24 +24,16 @@ public class DeliveryManager
         List<Announcement> res = new ArrayList();
         ReservationFinder rf = ReservationFinder.getINSTANCE();
         CopyFinder cf = CopyFinder.getINSTANCE();
-        for(Reservation r:rf.findAll())
+        for(Reservation r:rf.findAllActiveReservationsWithUndeliveredCopies())
         {
-            if(!r.isRented() && r.getDateTo().after(new Timestamp(System.currentTimeMillis()))) // aktivna rezervacia
-            {
-                Copy c = cf.findById(r.getCopyId());
-                if(!c.isInLibrary())
-                {
-                    // magicky presun
-                    c.setInLibrary(true);
-                    c.update();
-                    Announcement a = new Announcement();
-                    a.setReaderId(r.getReaderId());
-                    a.setCopyId(c.getId());
-                    //System.out.println("Announcement for reader " + r.getReaderId() + ": Copy with id " + c.getId() + " has been delivered to library." );
-                    res.add(a);
-                }
-                
-            }
+            Copy c = CopyFinder.getINSTANCE().findById(r.getCopyId());
+            // magicky presun
+            c.setInLibrary(true);
+            c.update();
+            Announcement a = new Announcement();
+            a.setReaderId(r.getReaderId());
+            a.setCopyId(r.getCopyId());
+            res.add(a);
             
         }
         return res;
@@ -43,7 +42,7 @@ public class DeliveryManager
     /**
     * send all returned copies to stocks
     */
-    static void manageReturned() throws SQLException 
+    public static void manageReturned() throws SQLException 
     {
         CopyFinder cf = CopyFinder.getINSTANCE();
         for(Copy tmp_c : cf.findAll())

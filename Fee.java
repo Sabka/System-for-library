@@ -1,4 +1,7 @@
+package RDG;
 
+
+import MAIN.DBContext;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,7 +73,7 @@ public class Fee
     /**
      * Update row in table reservations in DB.
      */
-    public void update() throws SQLException {
+    public void update() throws SQLException{
         if (id == null) 
         {
             throw new IllegalStateException("id is not set");
@@ -85,7 +88,7 @@ public class Fee
         }
     }
     
-    void pay() throws SQLException 
+    public void pay() throws SQLException 
     {
         closed = true;
         update();

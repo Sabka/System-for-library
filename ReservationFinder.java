@@ -1,4 +1,7 @@
+package RDG;
 
+
+import MAIN.DBContext;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -77,6 +80,39 @@ public class ReservationFinder
         }
         return res;
     }
+    
+    
+    
+    /**
+    * find all active reservation
+    */
+    public List<Reservation> findAllActiveReservationsWithUndeliveredCopies() throws SQLException 
+    {
+        List<Reservation> res = new ArrayList();
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations r JOIN copies c on c.id = r.copy_id WHERE r.rented = false AND r.date_to >= ? AND c.in_library = false")) {
+            s.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+
+            try (ResultSet r = s.executeQuery()) 
+            {
+                while (r.next()) 
+                {
+                    Reservation b = new Reservation();
+
+                    b.setId(r.getInt("id"));
+                    b.setDateFrom(r.getTimestamp("date_from"));
+                    b.setDateTo(r.getTimestamp("date_to"));
+                    b.setCopyId(r.getInt("copy_id"));
+                    b.setReaderId(r.getInt("reader_id"));
+                    b.setRented(r.getBoolean("rented"));
+
+                    res.add(b);
+                }
+            }
+            
+        }
+        return res;
+    }
+    
     
     /**
      *  find reservation by id
