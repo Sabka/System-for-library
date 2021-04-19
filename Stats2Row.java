@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package STATS;
 
 /**
  *
  * @author sabinka
  */
-class Stats2Row 
+public class Stats2Row 
 {
     int x;
     int numFees;
@@ -52,10 +48,6 @@ class Stats2Row
     public String toString() {
         return "added days=" + x + ", number of fees=" + numFees + ", amount=" + amount;
     }
-    
-    
-    
-    
     
     
     

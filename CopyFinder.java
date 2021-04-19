@@ -25,6 +25,9 @@ public class CopyFinder
     /**
      * find and return copy with id
     * @param id id of a copy
+    * @return instance of found fee, null if fee with entered id does not exists
+
+     * @throws java.sql.SQLException
     */
     public Copy findById(int id) throws SQLException {
 
@@ -56,8 +59,10 @@ public class CopyFinder
     }
     
     /**
-    * find all copies in DB
-    * @return list of all copies
+    * find all copies of a book
+     * @param inputBookId
+    * @return list of all copies of book
+     * @throws java.sql.SQLException
     */
     public List<Copy> findCopiesOfBook(int inputBookId) throws SQLException {
 
@@ -86,6 +91,11 @@ public class CopyFinder
         }
     }
     
+    /**
+    * find all copies in DB
+    * @return list of all copies
+     * @throws java.sql.SQLException
+    */
     public List<Copy> findAll() throws SQLException
     {
         List<Copy> res = new ArrayList();

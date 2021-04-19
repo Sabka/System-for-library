@@ -1,3 +1,5 @@
+package STATS;
+
 /**
  *
  * @author sabinka

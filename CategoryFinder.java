@@ -25,6 +25,9 @@ public class CategoryFinder
     
     /**
      * find and return category with id
+     * @param id of category
+     * @return 
+     * @throws java.sql.SQLException
     */
     public Category findById(int id) throws SQLException {
 
@@ -54,6 +57,8 @@ public class CategoryFinder
         
     /**
      * find all book categories
+     * @return list of categories
+     * @throws java.sql.SQLException
      */
     public static List<Category> findAll() throws SQLException
     {

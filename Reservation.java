@@ -75,6 +75,7 @@ public class Reservation
     
     /**
     * set dateTo based on dateFrom, dateTo = dateFrom + 3 days
+     * @throws java.sql.SQLException
     */
     public void autosetDateTo() throws SQLException
     {
@@ -83,6 +84,7 @@ public class Reservation
 
     /**
      * Insert new row to table reservations in DB.
+     * @throws java.sql.SQLException
      */
     public void insert() throws SQLException
     {
@@ -105,6 +107,7 @@ public class Reservation
 
     /**
      * Update row in table reservations in DB.
+     * @throws java.sql.SQLException
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -130,6 +133,7 @@ public class Reservation
 
     /**
      * Delete row from table reservations in DB.
+     * @throws java.sql.SQLException
      */
     public void delete() throws SQLException {
         if (id == null) {

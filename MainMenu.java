@@ -1,31 +1,21 @@
 package UI;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import TS.ResRenManager;
 import STATS.*;
 import TS.*;
 import RDG.*;
-import UI.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 /**
  *
  * @author Alexander Šimko, sabinka
@@ -82,7 +72,6 @@ public class MainMenu extends Menu {
     /**
      *
      * @param option
-     * @throws Exception
      */
     @Override
     public void handle(String option)
@@ -134,10 +123,9 @@ public class MainMenu extends Menu {
     {
         ReaderFinder rf = ReaderFinder.getINSTANCE();
         List<Reader> lr = rf.findAll();   
-        for(Reader tmp:lr)
-        {
+        lr.forEach(tmp -> {
             System.out.println(tmp);
-        }
+        });
         if(lr.isEmpty()) System.out.println("No readers found");
     }
 
@@ -266,7 +254,7 @@ public class MainMenu extends Menu {
         {
             for(Book tmp:lb)
             {
-                System.out.println((bf.checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
+                System.out.println((BookFinder.checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
             }
         }
       
@@ -289,7 +277,7 @@ public class MainMenu extends Menu {
         {
             for(Book tmp:lb)
             {
-                System.out.println((bf.checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
+                System.out.println((BookFinder.checkAvailability(tmp.getId())?"":"not ") + "available " + tmp);
             }
         }
     }
@@ -532,7 +520,7 @@ public class MainMenu extends Menu {
         
         
         //create reservation
-        int id = -1;
+        int id;
         try
         {
             id = ResRenManager.createReservation(readerId, bId);
@@ -595,7 +583,7 @@ public class MainMenu extends Menu {
         }
         
         System.out.println("CATEGORIES:");
-        for(Category cat:CategoryFinder.getINSTANCE().findAll())
+        for(Category cat:CategoryFinder.findAll())
         {
             System.out.println(cat);
         }
@@ -648,7 +636,6 @@ public class MainMenu extends Menu {
      */
     private void findAllStocks() throws SQLException
     {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StockFinder bf = StockFinder.getINSTANCE();
      
         List<Stock> lb = bf.findAll();   
@@ -680,7 +667,7 @@ public class MainMenu extends Menu {
     }
 
     /**
-     * Read stock atributes and update it in DB.
+     * Read stock attributes and update it in DB.
      */
     private void editAStock() throws IOException, SQLException
     {
@@ -731,6 +718,9 @@ public class MainMenu extends Menu {
         
     }
 
+    /**
+     * Reader can get copies he reserved.
+     */
     private void getReservedBook() throws IOException, SQLException 
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -754,7 +744,7 @@ public class MainMenu extends Menu {
         System.out.println("\nEnter reservation id:");
         int rId = Integer.parseInt(br.readLine());
      
-        Timestamp tmp = null;
+        Timestamp tmp;
         try
         {
             tmp = ResRenManager.getReservedBooks(readerId, rId);
@@ -769,6 +759,9 @@ public class MainMenu extends Menu {
         
     }
 
+    /**
+     * Reader can return a copy he rented.
+     */
     private void returnBook() throws IOException, SQLException 
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -779,10 +772,9 @@ public class MainMenu extends Menu {
       
         // print his active rentals
         List<Rental> activeRens = RentalFinder.getINSTANCE().findReadersActiveRentals(readerId);
-        for(Rental tmp: activeRens)
-        {
+        activeRens.forEach(tmp -> {
             System.out.println(tmp);
-        }
+        });
         if(activeRens.isEmpty()) 
         { 
             System.out.println("Reader has no active rentals."); 
@@ -796,7 +788,7 @@ public class MainMenu extends Menu {
         System.out.println("Enter copy state (%):");
         Double state = Double.parseDouble(br.readLine());
        
-        Fee f = null;
+        Fee f;
         try
         {
             f = ResRenManager.returnBook(readerId, rId, state);
@@ -814,6 +806,11 @@ public class MainMenu extends Menu {
         
     }
 
+    /**
+     * Make fees for copies that werent returned in time.
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
+     */
     public void makeFeesForNotReturned() throws IOException, SQLException 
     {
        
@@ -834,6 +831,9 @@ public class MainMenu extends Menu {
 
     }
 
+    /**
+     * Reader pay for his fees.
+     */
     private void payFees() throws IOException, SQLException
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -851,10 +851,9 @@ public class MainMenu extends Menu {
             
         }
         
-        for(Fee f:readersFees)
-        {
+        readersFees.forEach(f -> {
             System.out.println(f);
-        }
+        });
         
         // paying
         System.out.println("Enter comma separated fee ids");
@@ -894,6 +893,9 @@ public class MainMenu extends Menu {
         
     }
 
+    /**
+     * Prints delay states based on entered N.
+     */
     private void delayStats() throws IOException, SQLException 
     {
         

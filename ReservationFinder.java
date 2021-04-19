@@ -23,6 +23,7 @@ public class ReservationFinder
     /**
      *  find all reservations in DB
      * @return list of found reservations
+     * @throws java.sql.SQLException
      */
     public List<Reservation> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations")) {
@@ -50,6 +51,9 @@ public class ReservationFinder
     
     /**
     * find active reservation of reader
+     * @param rId - reader id
+     * @return list of active reservations of a reader
+     * @throws java.sql.SQLException
     */
     public List<Reservation> findReadersActiveReservations(int rId) throws SQLException 
     {
@@ -58,12 +62,10 @@ public class ReservationFinder
             s.setInt(1, rId);
             s.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
 
-            Boolean nejake = false;
             try (ResultSet r = s.executeQuery()) 
             {
                 while (r.next()) 
                 {
-                    nejake = true;
                     Reservation b = new Reservation();
 
                     b.setId(r.getInt("id"));
@@ -85,6 +87,8 @@ public class ReservationFinder
     
     /**
     * find all active reservation
+     * @return list of found reservations
+     * @throws java.sql.SQLException
     */
     public List<Reservation> findAllActiveReservationsWithUndeliveredCopies() throws SQLException 
     {
@@ -116,6 +120,9 @@ public class ReservationFinder
     
     /**
      *  find reservation by id
+     * @param id - id of a reservation
+     * @return instance of reservation or null if not exists 
+     * @throws java.sql.SQLException
      */
     public Reservation findById(int id) throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations where id = ?"))

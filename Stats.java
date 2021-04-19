@@ -1,12 +1,12 @@
+package STATS;
 
+
+import MAIN.DBContext;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
 
 /**
@@ -18,6 +18,9 @@ public class Stats
     
     /**
     * count bookAvailabilityStats and return list of Stat1Rows with counted stats
+     * @param year
+     * @return list of stat1rows with info about each book availability in entered year
+     * @throws java.sql.SQLException
     */
     public static List<Stat1Row> bookAvailability(int year) throws SQLException
     {
@@ -38,7 +41,14 @@ public class Stats
         return res;
     }
 
-    static List<Stats2Row> getDelayStats(int n) throws SQLException 
+    
+    /**
+    * find difference between real state and state with increased rental periods, increase from interval 1, n
+     * @param n
+     * @return list of stat2rows with info about delayStats from 1 to entered N
+     * @throws java.sql.SQLException 
+    */
+    public static List<Stats2Row> getDelayStats(int n) throws SQLException 
     {
         List<Stats2Row> res = new ArrayList();
         PreparedStatement p = DBContext.getConnection().prepareStatement("select amount, count(*) from fees group by amount order by amount;");
@@ -51,18 +61,16 @@ public class Stats
             Stats2Row tmp = new Stats2Row();
             tmp.setAmount(r.getDouble("amount") * r.getInt("count"));
             tmp.setNumFees(r.getInt("count"));
-            System.out.println(r.getDouble("amount"));
-            if((int)r.getDouble("amount") == 5)
-            {
-                tmp.setX(1);
-            }
-            else if((int)r.getDouble("amount") == 10)
-            {
-                tmp.setX(7);
-            }
-            else
-            {
-               tmp.setX(30); 
+            switch ((int)r.getDouble("amount")) {
+                case 5:
+                    tmp.setX(1);
+                    break;
+                case 10:
+                    tmp.setX(7);
+                    break;
+                default:
+                    tmp.setX(30);
+                    break; 
             }
             list.add(tmp);
         }

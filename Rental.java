@@ -2,10 +2,6 @@ package RDG;
 
 
 import MAIN.DBContext;
-import RDG.Category;
-import RDG.CopyFinder;
-import RDG.Copy;
-import RDG.CategoryFinder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -76,6 +72,7 @@ public class Rental
     
     /**
     * set dateTo based on book category and dateFrom
+     * @throws java.sql.SQLException
     */
     public void autosetDateTo() throws SQLException
     {
@@ -98,6 +95,7 @@ public class Rental
     
     /**
      * Insert new row to table rentals in DB.
+     * @throws java.sql.SQLException
      */
     public void insert() throws SQLException
     {
@@ -120,6 +118,7 @@ public class Rental
 
     /**
      * Update row in table rentals in DB.
+     * @throws java.sql.SQLException
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -140,6 +139,7 @@ public class Rental
 
     /**
      * Delete row from table rentals in DB.
+     * @throws java.sql.SQLException
      */
     public void delete() throws SQLException {
         if (id == null) {

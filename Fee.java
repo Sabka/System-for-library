@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 
 /**
  *
@@ -54,6 +53,7 @@ public class Fee
     
     /**
      * Insert new row to table fees in DB.
+     * @throws java.sql.SQLException
      */
     public void insert() throws SQLException
     {
@@ -72,6 +72,7 @@ public class Fee
     
     /**
      * Update row in table reservations in DB.
+     * @throws java.sql.SQLException
      */
     public void update() throws SQLException{
         if (id == null) 
@@ -88,6 +89,10 @@ public class Fee
         }
     }
     
+    /**
+     *  Fee was payed, update its row in DB.
+     * @throws java.sql.SQLException
+     */
     public void pay() throws SQLException 
     {
         closed = true;

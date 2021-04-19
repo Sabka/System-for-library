@@ -21,6 +21,9 @@ public class BookFinder
     
     /**
     * check whether any copy of book with inputId is available in current time
+     * @param inputId - id of a Book
+     * @return whether there is any available copy of book
+     * @throws java.sql.SQLException
     */
     public static boolean checkAvailability(int inputId) throws SQLException
     {
@@ -39,7 +42,9 @@ public class BookFinder
     
     /**
     * find book by its id
+     * @param id -  id of a Book
     * @return object of found Book
+     * @throws java.sql.SQLException
     */
     public Book findById(int id) throws SQLException {
 
@@ -66,7 +71,9 @@ public class BookFinder
     
     /**
     * find books by its title
+     * @param title - book title
     * @return found Book
+     * @throws java.sql.SQLException
     */
     public List<Book> findByTitle(String title) throws SQLException {
 
@@ -91,6 +98,7 @@ public class BookFinder
     * find books written by author
     * @param authorLastName last name of author
     * @return list of Books
+     * @throws java.sql.SQLException
     */
     public List<Book> findByAuthor(String authorLastName) throws SQLException {
 
@@ -115,6 +123,7 @@ public class BookFinder
     /**
     * find all books in DB
     * @return list of Books
+     * @throws java.sql.SQLException
     */
     public List<Book> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM books")) {
@@ -139,6 +148,7 @@ public class BookFinder
     /**
     * find maximum of book ids  in DB
     * @return maximum id
+     * @throws java.sql.SQLException
     */
     public int maxIndex() throws SQLException
     {

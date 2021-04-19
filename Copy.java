@@ -75,6 +75,8 @@ public class Copy
     
     /**
     * return whether this copy is available in current time
+     * @return whether this copy is available in current time
+     * @throws java.sql.SQLException
     */
     public boolean isAvailable() throws SQLException
     {
@@ -95,6 +97,7 @@ public class Copy
 
     /**
      * Insert new row to table copies in DB.
+     * @throws java.sql.SQLException
      */
     public void insert() throws SQLException
     {
@@ -115,6 +118,7 @@ public class Copy
 
     /**
      * Update row in table copies in DB.
+     * @throws java.sql.SQLException
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -142,6 +146,7 @@ public class Copy
 
     /**
      * Delete row from table copies in DB.
+     * @throws java.sql.SQLException
      */
     public void delete() throws SQLException {
         if (id == null) {

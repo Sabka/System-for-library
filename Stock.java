@@ -31,6 +31,7 @@ public class Stock
 
     /**
      * Insert new row to table stocks in DB.
+     * @throws java.sql.SQLException
      */
     public void insert() throws SQLException
     {
@@ -47,6 +48,7 @@ public class Stock
 
     /**
      * Update row in table stocks in DB.
+     * @throws java.sql.SQLException
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -62,6 +64,7 @@ public class Stock
 
     /**
      * Delete row from table stocks in DB.
+     * @throws java.sql.SQLException
      */
     public void delete() throws SQLException {
         if (id == null) {

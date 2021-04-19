@@ -2,14 +2,7 @@ package TS;
 
 
 import MAIN.DBContext;
-import RDG.Copy;
-import RDG.CopyFinder;
 import RDG.Fee;
-import RDG.ReaderFinder;
-import RDG.Rental;
-import RDG.Reservation;
-import RDG.ReservationFinder;
-import UI.InputChecker;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,8 +10,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -28,6 +19,12 @@ import java.util.stream.Collectors;
  */
 public class FeeManager 
 {
+    /**
+    * create new timestamp which is entered days earlier than entered timestamp
+     * @param t - old timestamp
+     * @param days - number of days
+     * @return created timestamp
+    */
     public static Timestamp getEarlierTimestamp(Timestamp t, int days)
     {
         Timestamp tmp = new Timestamp(t.getTime());
@@ -38,6 +35,12 @@ public class FeeManager
         return tmp;
     }
     
+    /**
+    * create fees for readers who hadn't returned rented books in time 
+     * @param date - date of check
+     * @return list of announcements for readers
+     * @throws java.sql.SQLException
+    */
     public static List<FeeAnnouncement> feesForNotReturnedCopies(Timestamp date) throws SQLException
     {
         
@@ -90,22 +93,18 @@ public class FeeManager
         
     }
     
-    
+    /**
+    * transaction for paying entered fees
+     * @param fees - get list of fees to become payed
+     * @throws java.sql.SQLException
+    */
     public static void payFees(List<Fee> fees) throws SQLException
     {
         try
         {
             DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
             DBContext.getConnection().setAutoCommit(false);
-            fees.forEach(f-> 
-            {
-                f.setClosed(true);
-                try {
-                    f.update();
-                } catch (SQLException ex) {
-                    Logger.getLogger(FeeManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
+            for(Fee f:fees) f.pay();
             
         }
         finally
@@ -115,6 +114,13 @@ public class FeeManager
         }
     }
     
+    /**
+    * count summary amount of fees reader want to pay
+     * @param readersFees - readers actual fees
+     * @param fIds - list of fee ids which had been entered
+     * @return sum
+     * @throws java.lang.Exception
+    */
     public static double countSum(List<Fee> readersFees, List<Integer> fIds) throws Exception
     {
         double sum = 0;
@@ -125,6 +131,12 @@ public class FeeManager
         return sum;
     }
     
+    /**
+    * find only valid fees from entered fees
+     * @param readersFees - readers actual fees
+     * @param fIds - list of fee ids which had been entered
+     * @return list of valid fees
+    */
     public static List<Fee> validFees(List<Fee> readersFees, List<Integer> fIds)
     {
         return readersFees.stream().filter(f -> fIds.contains(f.getId())).collect(Collectors.toList());

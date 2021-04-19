@@ -21,7 +21,15 @@ import java.util.List;
  */
 public class ResRenManager 
 {
-
+    
+    /**
+    * create new reservation based on input
+     * @param readerId
+     * @param bId - book id
+     * @return reserved copy id
+     * @throws java.sql.SQLException
+     * @throws java.lang.Exception
+    */
     public static int createReservation(int readerId, int bId) throws SQLException, Exception 
     {
         try
@@ -76,7 +84,14 @@ public class ResRenManager
         }
     }
     
-    
+    /**
+    * create rental from reservation
+     * @param readerId
+     * @param rId - reservation id
+     * @return timestamp - date_to of reservation
+     * @throws java.sql.SQLException
+     * @throws java.lang.Exception
+    */  
     public static Timestamp getReservedBooks(int readerId, int rId) throws SQLException, Exception
     {
         try
@@ -153,6 +168,14 @@ public class ResRenManager
           
     }
     
+    /**
+    * manage returning rented copy
+     * @param readerId
+     * @param rId - id of a rental
+     * @param state - state of a copy (%)
+     * @return instance of fee - if copy was damaged, else null
+     * @throws java.sql.SQLException
+    */
     public static Fee returnBook(int readerId, int rId, double state) throws SQLException, Exception
     {
         try

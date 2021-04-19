@@ -7,7 +7,6 @@ import RDG.Reservation;
 import RDG.CopyFinder;
 import RDG.Copy;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -18,12 +17,13 @@ public class DeliveryManager
 {
     /**
     * send all reserved copies to library
+     * @return list of announcements for readers
+     * @throws java.sql.SQLException
     */
     public static List<Announcement> manageReservations() throws SQLException
     {
         List<Announcement> res = new ArrayList();
         ReservationFinder rf = ReservationFinder.getINSTANCE();
-        CopyFinder cf = CopyFinder.getINSTANCE();
         for(Reservation r:rf.findAllActiveReservationsWithUndeliveredCopies())
         {
             Copy c = CopyFinder.getINSTANCE().findById(r.getCopyId());
@@ -41,6 +41,7 @@ public class DeliveryManager
     
     /**
     * send all returned copies to stocks
+     * @throws java.sql.SQLException
     */
     public static void manageReturned() throws SQLException 
     {

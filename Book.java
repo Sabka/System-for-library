@@ -33,6 +33,7 @@ public class Book
 
     /**
      * Insert new row to table books in DB.
+     * @throws java.sql.SQLException
      */
     public void insert() throws SQLException
     {
@@ -49,6 +50,7 @@ public class Book
 
     /**
      * Update row in table books in DB.
+     * @throws java.sql.SQLException
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -64,6 +66,7 @@ public class Book
 
     /**
      * Delete row from table books in DB.
+     * @throws java.sql.SQLException
      */
     public void delete() throws SQLException {
         if (id == null) {
