@@ -521,28 +521,20 @@ public class MainMenu extends Menu {
         
         
         //create reservation
-        boolean b = true;
-        int id=0;
-        while(b)
+        int id;
+        try
         {
-            
-            try
-            {
-                b = false;
-                id = ResRenManager.createReservation(readerId, bId);
-            }
-            catch(PSQLException e)
-            {
-                b = true;
 
-            }
-            catch(Exception e)
-            {
-
-                System.out.println(e.getMessage());
-                return;
-            }
+            id = ResRenManager.createReservation(readerId, bId);
         }
+
+        catch(Exception e)
+        {
+
+            System.out.println(e.getMessage());
+            return;
+        }
+        
         
         System.out.println("Copy "+ id +" has been succesfully reserved.");
         
@@ -557,9 +549,9 @@ public class MainMenu extends Menu {
     private void deliverBooks() throws SQLException
     {
         List<Announcement> a = DeliveryManager.manageReservations(); // magicky presun knih
-        a.forEach(_item -> 
+        a.forEach(item -> 
         {
-            System.out.println(a);
+            System.out.println(item);
         });
         
     }
@@ -756,17 +748,21 @@ public class MainMenu extends Menu {
         
         System.out.println("\nEnter reservation id:");
         int rId = Integer.parseInt(br.readLine());
-     
-        Timestamp tmp;
+        
+        
+        Timestamp tmp = null;
+        
         try
         {
             tmp = ResRenManager.getReservedBooks(readerId, rId);
         }
+
         catch(Exception e)
         {
             System.out.println(e.getMessage());
             return;
         }
+        
         
         System.out.println("Book has been succesfully rented till " + tmp + " . Enjoy reading.");
         
