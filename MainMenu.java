@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -520,15 +521,27 @@ public class MainMenu extends Menu {
         
         
         //create reservation
-        int id;
-        try
+        boolean b = true;
+        int id=0;
+        while(b)
         {
-            id = ResRenManager.createReservation(readerId, bId);
-        }
-        catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-            return;
+            
+            try
+            {
+                b = false;
+                id = ResRenManager.createReservation(readerId, bId);
+            }
+            catch(PSQLException e)
+            {
+                b = true;
+
+            }
+            catch(Exception e)
+            {
+
+                System.out.println(e.getMessage());
+                return;
+            }
         }
         
         System.out.println("Copy "+ id +" has been succesfully reserved.");

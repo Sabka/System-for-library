@@ -10,6 +10,8 @@ import RDG.RentalFinder;
 import RDG.Reservation;
 import RDG.ReservationFinder;
 import UI.InputChecker;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -34,7 +36,7 @@ public class ResRenManager
     {
         try
         {
-            DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+            DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             DBContext.getConnection().setAutoCommit(false);
              // check reader
             if(!InputChecker.checkReader(readerId))
@@ -52,7 +54,7 @@ public class ResRenManager
                 throw new Exception("You have unpayed fees.");
             }
 
-            // check book and copy
+
             Copy tmp = null;
             for(Copy c: CopyFinder.getINSTANCE().findCopiesOfBook(bId))
             {
@@ -67,6 +69,11 @@ public class ResRenManager
             {
                throw new Exception("Sorry, there is no available copy of this book.");
             }
+            
+            // dummy nacitavanie pre ucely testovania serializacie
+            
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            br.readLine();
 
             Reservation res = new Reservation();
             res.setCopyId(tmp.getId());
