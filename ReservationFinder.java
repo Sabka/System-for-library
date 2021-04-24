@@ -93,7 +93,7 @@ public class ReservationFinder
     public List<Reservation> findAllActiveReservationsWithUndeliveredCopies() throws SQLException 
     {
         List<Reservation> res = new ArrayList();
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations r JOIN copies c on c.id = r.copy_id WHERE r.rented = false AND r.date_to >= ? AND c.in_library = false")) {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM reservations r JOIN copies c on c.id = r.copy_id WHERE r.rented = false AND r.date_to >= ? AND c.in_library = false AND r.reader_id is not null")) {
             s.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
 
             try (ResultSet r = s.executeQuery()) 

@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -539,14 +538,24 @@ public class MainMenu extends Menu {
         System.out.println("Copy "+ id +" has been succesfully reserved.");
         
         // prines knihy do kniznice a vypis oznamenia
-        deliverBooks();        
-        
+        try
+        {
+            System.out.println("delivery start");
+            deliverBooks(); 
+            System.out.println("delivery end");
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+            return;
+        }
+     
     }
     
     /**
      * Deliver books and print announcements for readers.
      */
-    private void deliverBooks() throws SQLException
+    private void deliverBooks() throws SQLException, Exception
     {
         List<Announcement> a = DeliveryManager.manageReservations(); // magicky presun knih
         a.forEach(item -> 
@@ -750,7 +759,7 @@ public class MainMenu extends Menu {
         int rId = Integer.parseInt(br.readLine());
         
         
-        Timestamp tmp = null;
+        Timestamp tmp;
         
         try
         {
@@ -811,8 +820,6 @@ public class MainMenu extends Menu {
         
         System.out.println("Book has been succesfully returned.");
         
-        DeliveryManager.manageReturned();
-        
     }
 
     /**
@@ -868,10 +875,12 @@ public class MainMenu extends Menu {
         System.out.println("Enter comma separated fee ids");
         List<Integer> fIds = Arrays.asList(br.readLine().split(",")).stream().map(x -> Integer.parseInt(x)).collect(Collectors.toList());
         
+        List<Fee> valid = FeeManager.validFees(readersFees, fIds);
         double sum;
+        
         try
         {
-            sum = FeeManager.countSum(readersFees, fIds);
+            sum = FeeManager.countSum(valid);
         }
         catch(Exception e)
         {
@@ -882,12 +891,12 @@ public class MainMenu extends Menu {
         System.out.println("The complete sum to pay:" + sum + "euros");
         
         // confirmation
-        System.out.println("Please confirm, the fees were payed. T -> payed,F -> unpayed");
+        System.out.println("Please confirm, the sum was payed. T -> payed,F -> unpayed");
         String confirmation = br.readLine();
         switch (confirmation.trim()) 
         {
             case "T":
-                for(Fee f: readersFees) f.pay();
+                FeeManager.payFees(valid);
                 System.out.println("Fees were succesfully payed.");
                 break;
             case "F":
@@ -898,7 +907,7 @@ public class MainMenu extends Menu {
                 break;
         }
         
-        FeeManager.payFees(FeeManager.validFees(readersFees, fIds));
+        
         
     }
 
