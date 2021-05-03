@@ -108,7 +108,7 @@ public class DeliveryManager
             catch(PSQLException e)
             {
                 // opakuj transakciu, lebo nastala chyba (zrejme vymazana copy)
-                System.err.println("opakujem");
+                System.err.println("opakujem man ret");
             }
             finally
             {

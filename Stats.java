@@ -25,7 +25,7 @@ public class Stats
     public static List<Stat1Row> bookAvailability(int year) throws SQLException
     {
         
-        PreparedStatement p = DBContext.getConnection().prepareStatement("select distinct(id), num(id, ?) as avail from books");
+        PreparedStatement p = DBContext.getConnection().prepareStatement("select id, num_days_book_avail(id, ?) as avail from books limit 10");
         p.setInt(1, year);
         ResultSet r = p.executeQuery();
         

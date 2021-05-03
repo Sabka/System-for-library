@@ -261,6 +261,7 @@ public class ResRenManager
                 c.setInLibrary(true);
                 c.setState(state);
                 c.update();
+                DeliveryManager.manageReturned();
                 return res;
 
             }

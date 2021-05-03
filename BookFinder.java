@@ -4,6 +4,7 @@ import MAIN.DBContext;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -27,9 +28,10 @@ public class BookFinder
     */
     public static boolean checkAvailability(int inputId) throws SQLException
     {
-        try(PreparedStatement s = DBContext.getConnection().prepareStatement("select count(id) from copies where book_id = ? and id not in (select copy_id from rentals where returned is null) and id not in (select copy_id from reservations)"))
+        try(PreparedStatement s = DBContext.getConnection().prepareStatement("select num_avail_cpy_of_book(?, ?)"))
         {
             s.setInt(1, inputId);
+            s.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
             try(ResultSet r = s.executeQuery())
             {
                 r.next();

@@ -240,7 +240,7 @@ public class MainMenu extends Menu {
     }
 
     /**
-     * Read books title and prints this book atributes.
+     * Read books title and prints this book attributes.
      */
     private void findBookByTitle() throws SQLException, IOException
     {
@@ -348,6 +348,7 @@ public class MainMenu extends Menu {
         if (!InputChecker.checkBook(bId)) 
         {
             System.out.println("No such book exists");
+            return;
         }
         
         b.delete();
