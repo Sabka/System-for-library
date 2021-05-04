@@ -43,6 +43,27 @@ public class BookFinder
     private BookFinder(){}
     
     /**
+    * find authors of a book
+     * @param b - id of a book
+     * @throws java.sql.SQLException
+    */
+    public void findAuthors(Book b) throws SQLException
+    {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT author_id  FROM book_authors WHERE book_id = ?")) 
+        {
+            s.setInt(1, b.getId());
+            ResultSet r = s.executeQuery();
+            List<Author> a = new ArrayList();
+            while(r.next())
+            {
+                a.add(new Author(r.getInt(1)));
+                
+            }
+            b.setAuthors(a);
+        }
+    }
+    
+    /**
     * find book by its id
      * @param id -  id of a Book
     * @return object of found Book
@@ -62,6 +83,8 @@ public class BookFinder
                     if (r.next()) {
                         throw new RuntimeException("Move than one row was returned");
                     }
+                    
+                    findAuthors(b);
 
                     return b;
                 } else {
@@ -89,6 +112,7 @@ public class BookFinder
 
                     b.setId(r.getInt("id"));
                     b.setTitle(r.getString("title"));
+                    findAuthors(b);
                     elements.add(b);
                 }
                 return elements;
@@ -115,6 +139,7 @@ public class BookFinder
 
                     b.setId(r.getInt("id"));
                     b.setTitle(r.getString("title"));
+                    findAuthors(b);
                     elements.add(b);
                 }
                 return elements;
@@ -138,6 +163,7 @@ public class BookFinder
 
                     b.setId(r.getInt("id"));
                     b.setTitle(r.getString("title"));
+                    findAuthors(b);
                     elements.add(b);
                 }
 

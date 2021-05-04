@@ -366,3 +366,12 @@ insert into rentals (date_from, date_to, returned, reader_id, copy_id )
 	from (select timestamp '2000-01-10 20:00:00' +
 	       random() * (timestamp '2021-01-20 20:00:00' -
 		           timestamp '2000-01-10 10:00:00') as t from generate_series(1, 1000000) as seq(i)) as tmp2;
+		           
+		           
+		           
+		           
+		           
+		           
+		           
+		           
+		           

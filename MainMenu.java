@@ -7,10 +7,12 @@ import RDG.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import static java.lang.Integer.min;
 import java.sql.SQLException;
 import java.util.List;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,6 +58,7 @@ public class MainMenu extends Menu {
         System.out.println(" 32. return a book            ");
         System.out.println(" 33. check not returned books            ");        
         System.out.println(" 34. pay fees            ");
+        System.out.println(" 35. book delivery            ");
         System.out.println("\n***************************************");
         System.out.println("                STATS                  ");
         System.out.println("***************************************");
@@ -103,6 +106,7 @@ public class MainMenu extends Menu {
                 case "32":   returnBook(); break;
                 case "33":   makeFeesForNotReturned(); break;
                 case "34":   payFees(); break;
+                case "35":   bookDeliv(); break;
                 case "60":   getBookAvailStats(); break;
                 case "61":   delayStats(); break;
                 case "100":   exit(); break;
@@ -122,10 +126,16 @@ public class MainMenu extends Menu {
     private void listAllReaders() throws SQLException
     {
         ReaderFinder rf = ReaderFinder.getINSTANCE();
-        List<Reader> lr = rf.findAll();   
-        lr.forEach(tmp -> {
-            System.out.println(tmp);
-        });
+        List<Reader> lr = rf.findAll(); 
+        if(!lr.isEmpty())
+        {
+            System.out.println(lr.size() + " readers found");
+        }
+        for(int i=0; i< min(lr.size(), 50); i++)
+        {
+           System.out.println(lr.get(i));
+        }
+       
         if(lr.isEmpty()) System.out.println("No readers found");
     }
 
@@ -294,6 +304,12 @@ public class MainMenu extends Menu {
         
         System.out.println("Enter title:");
         b.setTitle(br.readLine());
+        
+        System.out.println("Enter authors ids (coma separated):");
+        List<String> ids = Arrays.asList( br.readLine().trim().split(","));
+        List<Author> as = new ArrayList();
+        ids.forEach(x -> as.add(new Author(Integer.parseInt(x))));
+        b.setAuthors(as);
        
         b.insert();
         
@@ -326,6 +342,12 @@ public class MainMenu extends Menu {
 
         System.out.println("Enter title:");
         b.setTitle(br.readLine());
+        
+        System.out.println("Enter authors ids (coma separated):");
+        List<String> ids = Arrays.asList( br.readLine().trim().split(","));
+        List<Author> as = new ArrayList();
+        ids.forEach(x -> as.add(new Author(Integer.parseInt(x))));
+        b.setAuthors(as);
 
         b.update();
 
@@ -655,10 +677,15 @@ public class MainMenu extends Menu {
      
         List<Stock> lb = bf.findAll();   
         if(lb.isEmpty()) System.out.println("No stock found");
-        lb.forEach(o -> 
+        else
         {
-            System.out.println(o);
-        });
+            System.out.println(lb.size() + " stocks found");
+            for(int i=0; i<min(50, lb.size()); i++)
+            {
+                System.out.println(lb.get(i));
+            }
+        }
+        
     }
 
 
@@ -927,6 +954,19 @@ public class MainMenu extends Menu {
         {
             System.out.println(line);
         });
+    }
+
+    private void bookDeliv() 
+    {
+        try
+        {
+            DeliveryManager.manageReservations();
+            DeliveryManager.manageReturned();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
     
 }

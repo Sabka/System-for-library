@@ -29,7 +29,7 @@ public class DeliveryManager
     */
     public static List<Announcement> manageReservations() throws SQLException, IOException, Exception
     {
-        while(true)
+        for(int i=0; i<10; i++)
         {
             try
             {
@@ -75,6 +75,7 @@ public class DeliveryManager
                 
             }
         }
+        throw new Error("Something went wong, please try again");
         
     }
     
@@ -84,12 +85,13 @@ public class DeliveryManager
     */
     public static void manageReturned() throws SQLException 
     {
-        while(true)
+        for(int i=0; i<10; i++)
         {
             try
             {
-                DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
                 DBContext.getConnection().setAutoCommit(false);
+                DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                
                 
                 CopyFinder cf = CopyFinder.getINSTANCE();
                 for(Copy tmp_c : cf.findAll())
@@ -103,6 +105,8 @@ public class DeliveryManager
                         }
                     }
                 }
+                System.err.print("everything ok");
+                return;
 
             }
             catch(PSQLException e)
@@ -117,6 +121,7 @@ public class DeliveryManager
                 
             }
         }
+        throw new Error("Something went wong, please try again");
 
     }
 }

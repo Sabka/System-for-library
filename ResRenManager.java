@@ -36,7 +36,7 @@ public class ResRenManager
     */
     public static int createReservation(int readerId, int bId) throws SQLException, Exception 
     {
-        while(true)
+        for(int i=0; i<10; i++)
         {
             try
             {
@@ -100,7 +100,7 @@ public class ResRenManager
             }
             
         }
-        
+        throw new Error("Something went wong, please try again");
     }
     
     /**
@@ -113,7 +113,7 @@ public class ResRenManager
     */  
     public static Timestamp getReservedBooks(int readerId, int rId) throws SQLException, Exception
     {
-        while(true)
+        for(int i=0; i<10; i++)
         {
             try
             {
@@ -198,7 +198,7 @@ public class ResRenManager
             }
             
         }
-        
+        throw new Error("Something went wong, please try again");
           
     }
     
@@ -212,7 +212,7 @@ public class ResRenManager
     */
     public static Fee returnBook(int readerId, int rId, double state) throws SQLException, Exception
     {
-        while(true)
+        for(int i=0; i<10; i++)
         {
             try
             {
@@ -261,7 +261,6 @@ public class ResRenManager
                 c.setInLibrary(true);
                 c.setState(state);
                 c.update();
-                DeliveryManager.manageReturned();
                 return res;
 
             }
@@ -274,9 +273,10 @@ public class ResRenManager
             {
                 DBContext.getConnection().commit();
                 DBContext.getConnection().setAutoCommit(true);
+                DeliveryManager.manageReturned();
             }
         }
-        
+        throw new Error("Something went wong, please try again");
     }
      
 }

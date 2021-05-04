@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 /**
  *
@@ -14,6 +15,7 @@ public class Book
 {
     private Integer id;
     private String title;
+    private List<Author> authors;
 
     public Integer getId() {
         return id;
@@ -31,6 +33,16 @@ public class Book
         this.title = title;
     }
 
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+    
+    
+
     /**
      * Insert new row to table books in DB.
      * @throws java.sql.SQLException
@@ -46,6 +58,16 @@ public class Book
                 id = r.getInt(1);
             }
         }
+        for(Author a: authors)
+        {
+            try(PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO book_authors (book_id, author_id) VALUES (?, ?)"))
+            {
+                s.setInt(1, id);
+                s.setInt(2, a.getId());
+                s.executeUpdate();
+            } 
+        }
+        
     }
 
     /**
@@ -61,6 +83,22 @@ public class Book
             s.setString(1, title);
             s.setInt(2, id);
             s.executeUpdate();
+        }
+        
+        try(PreparedStatement s = DBContext.getConnection().prepareStatement("DELETE FROM book_authors WHERE book_id = ?"))
+        {
+            s.setInt(1, id);
+            s.executeUpdate();
+        }
+        
+        for(Author a: authors)
+        {
+            try(PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO book_authors (book_id, author_id) VALUES (?, ?)"))
+            {
+                s.setInt(1, id);
+                s.setInt(2, a.getId());
+                s.executeUpdate();
+            } 
         }
     }
 
@@ -82,8 +120,11 @@ public class Book
 
     @Override
     public String toString() {
-        return "Book{" + "id=" + id + ", title=" + title + '}';
+        return "Book{" + "id=" + id + ", title=" + title + ", authors=" + authors + '}';
     }
+
+    
+    
     
     
     
