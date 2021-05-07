@@ -18,6 +18,7 @@ public class Fee
     private int readerId;
     private double amount;
     private boolean closed;
+    private Integer delay;
 
     public int getId() {
         return id;
@@ -50,6 +51,16 @@ public class Fee
     public void setClosed(boolean closed) {
         this.closed = closed;
     }
+
+    public Integer getDelay() {
+        return delay;
+    }
+
+    public void setDelay(Integer delay) {
+        this.delay = delay;
+    }
+    
+    
     
     /**
      * Insert new row to table fees in DB.
@@ -57,10 +68,11 @@ public class Fee
      */
     public void insert() throws SQLException
     {
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO fees (reader_id, amount, closed) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("INSERT INTO fees (reader_id, amount, closed, delay) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             s.setInt(1, readerId);
             s.setDouble(2, amount);
             s.setBoolean(3, closed);
+            s.setInt(4, delay);
             s.executeUpdate();
 
             try (ResultSet r = s.getGeneratedKeys()) {
@@ -80,11 +92,12 @@ public class Fee
             throw new IllegalStateException("id is not set");
         }
 
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE fees SET reader_id = ?, amount = ?, closed = ? WHERE id = ?")) {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("UPDATE fees SET reader_id = ?, amount = ?, closed = ?, delay = ? WHERE id = ?")) {
             s.setInt(1, readerId);
             s.setDouble(2, amount);
             s.setBoolean(3, closed);
-            s.setInt(4, id);
+            s.setInt(4, delay);
+            s.setInt(5, id);
             s.executeUpdate();
         }
     }

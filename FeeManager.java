@@ -53,13 +53,13 @@ public class FeeManager
 
                 List<FeeAnnouncement> res = new ArrayList();
                 PreparedStatement s = DBContext.getConnection().prepareStatement
-                ("select reader_id, copy_id, id,  5 as amount from rentals  where returned is null and date_to "
+                ("select reader_id, copy_id, id,  5 as amount, 1 as delay from rentals  where returned is null and date_to "
                         + "between ?  and ? "
                         + "union "
-                        + "select reader_id, copy_id,  id, 10 as amount from rentals  where returned is null and date_to "
+                        + "select reader_id, copy_id,  id, 10 as amount, 7 as delay from rentals  where returned is null and date_to "
                         + "between ? and ? "
                         + "union\n"
-                        + "select reader_id, copy_id,  id, 20 as amount from rentals  where returned is null and date_to "
+                        + "select reader_id, copy_id,  id, 20 as amount, 30 as delay from rentals  where returned is null and date_to "
                         + "between ?  and ?");
 
 
@@ -78,6 +78,8 @@ public class FeeManager
                             f.setReaderId(r.getInt("reader_id"));
                             f.setAmount(r.getInt("amount"));
                             f.setClosed(false);
+                            f.setDelay(r.getInt("delay"));
+                            
                             f.insert();
 
                             res.add(new FeeAnnouncement(r.getInt("reader_id"), r.getInt("copy_id"), r.getInt("id"), r.getInt("amount")));

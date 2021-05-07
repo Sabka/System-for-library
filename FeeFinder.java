@@ -45,6 +45,7 @@ public class FeeFinder
                     f.setReaderId(r.getInt("reader_id"));
                     f.setAmount(r.getInt("amount"));
                     f.setClosed(r.getBoolean("closed"));
+                    f.setDelay(r.getInt("delay"));
                     
                     if (r.next()) {
                         throw new RuntimeException("More than one row was returned");
@@ -83,6 +84,7 @@ public class FeeFinder
                     f.setReaderId(r.getInt("reader_id"));
                     f.setAmount(r.getInt("amount"));
                     f.setClosed(r.getBoolean("closed"));
+                    f.setDelay(r.getInt("delay"));
                     
                     res.add(f);
                 }
@@ -114,6 +116,7 @@ public class FeeFinder
                     f.setReaderId(r.getInt("reader_id"));
                     f.setAmount(r.getInt("amount"));
                     f.setClosed(r.getBoolean("closed"));
+                    f.setDelay(r.getInt("delay"));
                     
                     res.add(f);
                 }
