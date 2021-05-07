@@ -128,7 +128,7 @@ public class BookFinder
     */
     public List<Book> findByAuthor(String authorLastName) throws SQLException {
 
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("select * from books where id in (SELECT book_id FROM book_authors WHERE author_id in (SELECT id from authors where last_name = ?))")) {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("select * from books b join book_authors ba on b.id = ba.book_id join authors a on a.id = ba.author_id where last_name = ?")) {
             s.setString(1, authorLastName);
 
             try (ResultSet r = s.executeQuery()) {
@@ -137,7 +137,7 @@ public class BookFinder
                 while (r.next()) {
                     Book b = new Book();
 
-                    b.setId(r.getInt("id"));
+                    b.setId(r.getInt(1));
                     b.setTitle(r.getString("title"));
                     findAuthors(b);
                     elements.add(b);

@@ -42,8 +42,8 @@ public class DeliveryManager
                 {
                     
                     // dummy nacitavanie pre ucely testovania serializacie
-                    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                    br.readLine();
+                    //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                    //br.readLine();
                     
                     if(!InputChecker.checkCopy(r.getCopyId()))
                     {
@@ -53,7 +53,7 @@ public class DeliveryManager
                     // magicky presun
                     c.setInLibrary(true);
                     c.update();
-                    System.err.println("update");
+                    //System.err.println("update");
                     Announcement a = new Announcement();
                     a.setReaderId(r.getReaderId());
                     a.setCopyId(r.getCopyId());
@@ -66,7 +66,7 @@ public class DeliveryManager
             catch(PSQLException e)
             {
                 // opakuj transakciu, lebo nastala chyba (zrejme vymazana copy)
-                System.err.println("opakujem");
+                //System.err.println("opakujem");
             }
             finally
             {
@@ -94,7 +94,7 @@ public class DeliveryManager
                 
                 
                 CopyFinder cf = CopyFinder.getINSTANCE();
-                for(Copy tmp_c : cf.findAll())
+                for(Copy tmp_c : cf.findInLib())
                 {
                     if(tmp_c.isInLibrary())
                     {
@@ -105,14 +105,14 @@ public class DeliveryManager
                         }
                     }
                 }
-                System.err.print("everything ok");
+                //System.err.print("everything ok");
                 return;
 
             }
             catch(PSQLException e)
             {
                 // opakuj transakciu, lebo nastala chyba (zrejme vymazana copy)
-                System.err.println("opakujem man ret");
+                //System.err.println("opakujem man ret");
             }
             finally
             {

@@ -67,7 +67,8 @@ create table fees
     id serial primary key,
     reader_id int references readers on delete set null  on update set null,
     amount numeric not null,
-    closed boolean
+    closed boolean,
+    delay integer
     
 );
 
@@ -109,7 +110,7 @@ $$;
 drop function if exists num(integer, integer);
 CREATE FUNCTION num(b_id integer, year integer) returns table (res bigint) LANGUAGE SQL AS
 $$
-	select count(id)
+	select count(i)
 	from 
 		(select i, is_avail_today(b_id, i) 
 		from generate_series
@@ -174,7 +175,6 @@ create index ren_dates on rentals(date_from, date_to);
 -------------------------------------------------------------
 
 
-drop index if exists res_copy;
 create index res_copy on reservations(copy_id);
 
 drop index if exists ren_copy;

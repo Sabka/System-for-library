@@ -62,7 +62,7 @@ public class ReaderFinder
      * @throws java.sql.SQLException
      */
     public List<Reader> findAll() throws SQLException {
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM readers")) {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM readers LIMIT 50")) {
             try (ResultSet r = s.executeQuery()) {
 
                 List<Reader> elements = new ArrayList<>();
@@ -101,5 +101,17 @@ public class ReaderFinder
             }   
         }
         return false;
+    }
+
+    public int countAll() throws SQLException 
+    {
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT count(*) FROM readers")) {
+            try (ResultSet r = s.executeQuery()) {
+
+                r.next();
+                return r.getInt(1);
+            }
+        }
+        
     }
 }

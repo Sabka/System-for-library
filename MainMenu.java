@@ -127,16 +127,17 @@ public class MainMenu extends Menu {
     {
         ReaderFinder rf = ReaderFinder.getINSTANCE();
         List<Reader> lr = rf.findAll(); 
-        if(!lr.isEmpty())
-        {
-            System.out.println(lr.size() + " readers found");
-        }
+        
         for(int i=0; i< min(lr.size(), 50); i++)
         {
            System.out.println(lr.get(i));
         }
        
         if(lr.isEmpty()) System.out.println("No readers found");
+        else
+        {
+            System.out.println( rf.countAll() + " readers found");
+        }
     }
 
 
@@ -563,9 +564,9 @@ public class MainMenu extends Menu {
         // prines knihy do kniznice a vypis oznamenia
         try
         {
-            System.out.println("delivery start");
+            //System.out.println("delivery start");
             deliverBooks(); 
-            System.out.println("delivery end");
+            //System.out.println("delivery end");
         }
         catch(Exception e)
         {
@@ -962,6 +963,7 @@ public class MainMenu extends Menu {
         {
             DeliveryManager.manageReservations();
             DeliveryManager.manageReturned();
+            System.out.println("Delivery succesful.");
         }
         catch(Exception e)
         {

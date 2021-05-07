@@ -75,9 +75,8 @@ public class ResRenManager
                 }
 
                 // dummy nacitavanie pre ucely testovania serializacie
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                br.readLine();
+                //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                //br.readLine();
 
                 Reservation res = new Reservation();
                 res.setCopyId(tmp.getId());
@@ -164,9 +163,8 @@ public class ResRenManager
                 }
 
                 // dummy nacitavanie pre ucely testovania serializacie
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                br.readLine();
+                //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                //br.readLine();
 
                 // everything ok, create rental
                 Rental res = new Rental();
@@ -248,9 +246,8 @@ public class ResRenManager
                 }
 
                 // dummy nacitavanie pre ucely testovania serializacie
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                br.readLine();
+                //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                //br.readLine();
 
                 // everything ok, update rental
                 r.setReturned(new Timestamp(System.currentTimeMillis()));
