@@ -27,7 +27,7 @@ public class Stat1Row
 
     @Override
     public String toString() {
-        return "book: " + bookId + " avgAvaiDays: " + numDays/12;
+        return "book: " + bookId + " avgAvaiDays: " + numDays;
     }
     
 }

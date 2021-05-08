@@ -116,12 +116,4 @@ public class Fee
     public String toString() {
         return "Fee{" + "id=" + id + ", readerId=" + readerId + ", amount=" + amount + ", closed=" + closed + ", delay=" + delay + '}';
     }
-    
-    
-    
-
-    
-    
-    
-    
 }

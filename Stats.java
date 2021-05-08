@@ -25,8 +25,30 @@ public class Stats
     public static List<Stat1Row> bookAvailability(int year) throws SQLException
     {
         
-        PreparedStatement p = DBContext.getConnection().prepareStatement("select id, num_days_book_avail(id, ?) as avail from books limit 10");
+        PreparedStatement p = DBContext.getConnection().prepareStatement(
+                "select book_id, (365 - count(distinct d))/12.0 as avail from\n" +
+                "\n" +
+                "(\n" +
+                "    select id, date_from, date_to, copy_id from reservations\n" +
+                "    union\n" +
+                "    select id, date_from, case when returned is null then date_to else returned end as date_to, copy_id from rentals\n" +
+                ") as data\n" +
+                "join generate_series(\n" +
+                "\n" +
+                "    TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*(?-2000),  -- 2021 za vstupny year\n" +
+                "    TIMESTAMP '2000-12-31 00:00:00'+ INTERVAL '1 year'*(?-2000), \n" +
+                "    INTERVAL '1 day') as seq(d)\n" +
+                "\n" +
+                "on d between date_from and date_to\n" +
+                "\n" +
+                "join copies c \n" +
+                "on copy_id = c.id\n" +
+                "\n" +
+                "group by book_id\n" +
+                "limit 100"
+                );
         p.setInt(1, year);
+        p.setInt(2, year);
         ResultSet r = p.executeQuery();
         
         List<Stat1Row> res = new ArrayList();
@@ -34,7 +56,7 @@ public class Stats
         while(r.next())
         {
             Stat1Row tmp = new Stat1Row();
-            tmp.setBookId(r.getInt("id"));
+            tmp.setBookId(r.getInt("book_id"));
             tmp.setNumDays(r.getInt("avail"));
             res.add(tmp);
         }
