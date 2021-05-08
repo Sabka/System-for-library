@@ -70,7 +70,7 @@ public class FeeFinder
     {
         List<Fee> res = new ArrayList();
         
-        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM fees where reader_id = ? and closed != true")) 
+        try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM fees where reader_id = ? and closed != true and amount > 0.0")) 
         {
             s.setInt(1, rId);
 
@@ -82,7 +82,7 @@ public class FeeFinder
 
                     f.setId(r.getInt("id"));
                     f.setReaderId(r.getInt("reader_id"));
-                    f.setAmount(r.getInt("amount"));
+                    f.setAmount(r.getDouble("amount"));
                     f.setClosed(r.getBoolean("closed"));
                     f.setDelay(r.getInt("delay"));
                     
@@ -114,7 +114,7 @@ public class FeeFinder
 
                     f.setId(r.getInt("id"));
                     f.setReaderId(r.getInt("reader_id"));
-                    f.setAmount(r.getInt("amount"));
+                    f.setAmount(r.getDouble("amount"));
                     f.setClosed(r.getBoolean("closed"));
                     f.setDelay(r.getInt("delay"));
                     

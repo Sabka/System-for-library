@@ -97,7 +97,7 @@ public class ReaderFinder
             try (ResultSet r = s.executeQuery())
             {
                 r.next();
-                if(r.getInt("sum") > 0) return true;
+                if(r.getDouble("sum") > 0) return true;
             }   
         }
         return false;

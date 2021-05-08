@@ -111,12 +111,14 @@ public class Fee
         closed = true;
         update();
     }
-    
-    
+
     @Override
     public String toString() {
-        return "Fee{" + "id=" + id + ", readerId=" + readerId + ", amount=" + amount + ", closed=" + closed + '}';
+        return "Fee{" + "id=" + id + ", readerId=" + readerId + ", amount=" + amount + ", closed=" + closed + ", delay=" + delay + '}';
     }
+    
+    
+    
 
     
     

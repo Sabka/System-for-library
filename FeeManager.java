@@ -42,9 +42,9 @@ public class FeeManager
      * @return list of announcements for readers
      * @throws java.sql.SQLException
     */
-    public static List<FeeAnnouncement> feesForNotReturnedCopies(Timestamp date) throws SQLException
+    public static List<FeeAnnouncement> feesForNotReturnedCopies(Timestamp date) throws SQLException,Exception
     {
-        while(true)
+        for(int i=0; i< 10; i++)
         {
             try
             {
@@ -53,25 +53,47 @@ public class FeeManager
 
                 List<FeeAnnouncement> res = new ArrayList();
                 PreparedStatement s = DBContext.getConnection().prepareStatement
-                ("select reader_id, copy_id, id,  5 as amount, 1 as delay from rentals  where returned is null and date_to "
-                        + "between ?  and ? "
+                ("select reader_id, copy_id, id, 5 as amount, "
+                        + "extract('day' from case when returned is null then now() else returned end - date_to) as delay  "
+                        + "from rentals  where (returned is null and date_to between ?  and ? ) "
+                        + "or (returned is not null and returned > date_to and extract('day' from ? - date_to)::int = 0)"
+                        
                         + "union "
-                        + "select reader_id, copy_id,  id, 10 as amount, 7 as delay from rentals  where returned is null and date_to "
-                        + "between ? and ? "
-                        + "union\n"
-                        + "select reader_id, copy_id,  id, 20 as amount, 30 as delay from rentals  where returned is null and date_to "
-                        + "between ?  and ?");
+                        
+                        + "select reader_id, copy_id, id, 10 as amount, "
+                        + "extract('day' from case when returned is null then now() else returned end - date_to) as delay "
+                        + "from rentals  where (returned is null and date_to between ? and ?) "
+                        + "or (returned is not null and returned > date_to and extract('day' from ? - date_to)::int = 6)"
+                        
+                        
+                        + "union "
+                        
+                        
+                        + "select reader_id, copy_id, id, 20 as amount, "
+                        + "extract('day' from case when returned is null then now() else returned end - date_to) as delay "
+                        + "from rentals  where (returned is null and date_to between ? and ?) "
+                        + "or (returned is not null and returned > date_to and extract('day' from ? - date_to)::int = 29)"
+             
+                );
 
 
                     s.setTimestamp(1, getEarlierTimestamp(date, 1));
                     s.setTimestamp(2, date);
-                    s.setTimestamp(3, getEarlierTimestamp(date, 7));
-                    s.setTimestamp(4, getEarlierTimestamp(date, 6));
-                    s.setTimestamp(5, getEarlierTimestamp(date, 30));
-                    s.setTimestamp(6, getEarlierTimestamp(date, 29));
+                    s.setTimestamp(3, date);
+                    
+                    s.setTimestamp(4, getEarlierTimestamp(date, 7));
+                    s.setTimestamp(5, getEarlierTimestamp(date, 6));
+                    s.setTimestamp(6, getEarlierTimestamp(date, 6));
+                    
+                    s.setTimestamp(7, getEarlierTimestamp(date, 30));
+                    s.setTimestamp(8, getEarlierTimestamp(date, 29));
+                    s.setTimestamp(9, getEarlierTimestamp(date, 29));
+                    
+                    //System.out.println(s);
 
-                    try (ResultSet r = s.executeQuery()) 
+                   try (ResultSet r = s.executeQuery()) 
                     {
+                     
                         while(r.next())
                         {
                             Fee f = new Fee();
@@ -79,12 +101,16 @@ public class FeeManager
                             f.setAmount(r.getInt("amount"));
                             f.setClosed(false);
                             f.setDelay(r.getInt("delay"));
-                            
                             f.insert();
 
                             res.add(new FeeAnnouncement(r.getInt("reader_id"), r.getInt("copy_id"), r.getInt("id"), r.getInt("amount")));
 
                         }
+                        
+                    }
+                    catch(Exception e)
+                    {
+                        System.err.println(e);
                     }
                     return res;
             }
@@ -97,7 +123,9 @@ public class FeeManager
                 DBContext.getConnection().commit();
                 DBContext.getConnection().setAutoCommit(true);
             }
-        }   
+        }  
+        throw new Exception("Something went wrong, please try again.");
+       
     }
     
     /**

@@ -351,17 +351,21 @@ select 'janko'||i, 'hrasko'||i, timestamp '2021-01-10 20:00:00' + random() * (ti
 
 
 
-insert into fees (reader_id, amount, closed)
+insert into fees (reader_id, amount, closed, delay)
 	select random_reader(i), 
    	 case floor(random()*3)
 		when 0 then 5
 		when 1 then 10
 		when 2 then 15
 		end ,
-		case floor(random()*2)
+	case floor(random()*2)
 		when 0 then false
 		when 1 then true
-		end 
+		end ,
+	case floor(random()*2)
+		when 0 then floor(random()*50)::int+1
+		when 1 then null
+		end
 	from generate_series(1, 10000) as seq(i);
 	           
            

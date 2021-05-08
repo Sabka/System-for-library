@@ -571,7 +571,6 @@ public class MainMenu extends Menu {
         catch(Exception e)
         {
             System.out.println(e.getMessage());
-            return;
         }
      
     }
@@ -865,12 +864,21 @@ public class MainMenu extends Menu {
         String ts = br.readLine();
         Timestamp t = Timestamp.valueOf(ts);
 
-        List<FeeAnnouncement> annList = FeeManager.feesForNotReturnedCopies(t);
-
-        annList.forEach(ann -> 
+        try
         {
-            System.out.println(ann);
-        });
+           List<FeeAnnouncement> annList = FeeManager.feesForNotReturnedCopies(t);
+           annList.forEach(ann -> 
+            {
+                System.out.println(ann);
+            });
+        
+        }
+        catch(Exception e)
+        {
+            System.out.println("Something went wrong, please try again.");
+            return;
+        }
+
         
         System.out.println("All rental dates had been successfully checked.");
 
