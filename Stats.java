@@ -26,25 +26,24 @@ public class Stats
     {
         
         PreparedStatement p = DBContext.getConnection().prepareStatement(
-                "select book_id, (365 - count(distinct d))/12.0 as avail from\n" +
+                "select book_id, count(distinct d)/12 as avail from \n" +
                 "\n" +
-                "(\n" +
-                "    select id, date_from, date_to, copy_id from reservations\n" +
-                "    union\n" +
-                "    select id, date_from, case when returned is null then date_to else returned end as date_to, copy_id from rentals\n" +
-                ") as data\n" +
-                "join generate_series(\n" +
+                "generate_series(\n" +
                 "\n" +
                 "    TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*(?-2000),  -- 2021 za vstupny year\n" +
                 "    TIMESTAMP '2000-12-31 00:00:00'+ INTERVAL '1 year'*(?-2000), \n" +
                 "    INTERVAL '1 day') as seq(d)\n" +
                 "\n" +
-                "on d between date_from and date_to\n" +
+                "cross join copies c\n" +
                 "\n" +
-                "join copies c \n" +
-                "on copy_id = c.id\n" +
+                "left join reservations res on res.copy_id =  c.id\n" +
+                "\n" +
+                "left join rentals ren on ren.copy_id = c.id\n" +
+                "\n" +
+                "where res.id is null and ren.id is null\n" +
                 "\n" +
                 "group by book_id\n" +
+                "\n" +
                 "limit 100"
                 );
         p.setInt(1, year);

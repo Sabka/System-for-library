@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 
 /**
  *
@@ -72,14 +73,29 @@ public class Fee
             s.setInt(1, readerId);
             s.setDouble(2, amount);
             s.setBoolean(3, closed);
-            s.setInt(4, delay);
+            if(delay == null)
+            {
+                s.setNull(4, Types.INTEGER);
+            }
+            else
+            {
+                s.setInt(4, delay);
+
+            }
+            
+            
             s.executeUpdate();
 
             try (ResultSet r = s.getGeneratedKeys()) {
                 r.next();
                 id = r.getInt(1);
             }
-        } 
+        }
+        catch(Exception e)
+        {
+            System.err.println(e);
+        }
+       
     }
     
     /**

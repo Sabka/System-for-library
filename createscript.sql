@@ -239,6 +239,19 @@ $$
 $$;
 
 
+create index ren_df on rentals(date_from);
 
+create index ren_dt on rentals(date_to);
+
+create index ren_ret on rentals(returned);
+
+create index res_df on reservations(date_from);
+
+create index res_dt on reservations(date_to);
+
+
+create index ren_cpy on rentals(copy_id);
+
+create index res_cpy on reservations(copy_id);
 
 

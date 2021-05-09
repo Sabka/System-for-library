@@ -838,7 +838,12 @@ public class MainMenu extends Menu {
         try
         {
             f = ResRenManager.returnBook(readerId, rId, state);
-            if(f != null) System.out.println(f);
+            if(f != null) 
+            {
+                System.out.println("The state of book decreased, reader has new fee to pay.");   
+                System.out.println(f);   
+            }
+            
         }
         catch(Exception e)
         {

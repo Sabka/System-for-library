@@ -234,7 +234,7 @@ public class ResRenManager
                 if((c.getState() - state) > MAXOLDNEWSTATEDIF)
                 {
                     Double amount = (c.getState() - state) * Fee.EUROSPERDECRESEDPERCENT;
-                    System.out.println("The state of book decreased, reader has new fee to pay.");
+                    
 
                     Fee f = new Fee();
                     f.setReaderId(readerId);
