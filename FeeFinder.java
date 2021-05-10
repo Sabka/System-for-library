@@ -27,10 +27,10 @@ public class FeeFinder
 
     
     /**
-     * find and return fee with id
+    * find and return fee with id
     * @param id id of a copy
-     * @return instance of found fee, null if fee with entered id does not exists
-     * @throws java.sql.SQLException
+    * @return instance of found fee, null if fee with entered id does not exists
+    * @throws java.sql.SQLException
     */
     public Fee findById(int id) throws SQLException {
 
@@ -95,9 +95,8 @@ public class FeeFinder
     
     /**
     * find all fees
-    * 
-     * @return list of fees
-     * @throws java.sql.SQLException
+    * @return list of fees
+    * @throws java.sql.SQLException
     */
     public List<Fee> findAll() throws SQLException
     {

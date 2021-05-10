@@ -23,11 +23,10 @@ public class CopyFinder
 
     
     /**
-     * find and return copy with id
+     * find and return copy with entered id
     * @param id id of a copy
     * @return instance of found fee, null if fee with entered id does not exists
-
-     * @throws java.sql.SQLException
+    * @throws java.sql.SQLException
     */
     public Copy findById(int id) throws SQLException {
 
@@ -124,6 +123,11 @@ public class CopyFinder
         return res;
     }
     
+    /**
+    * find all copies which are in library 
+    * @return list of copies
+    * @throws java.sql.SQLException
+    */
     public List<Copy> findInLib() throws SQLException
             {
         List<Copy> res = new ArrayList();

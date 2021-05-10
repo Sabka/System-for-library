@@ -6,7 +6,8 @@ import java.sql.Connection;
  *
  * @author  Alexander Šimko, sabinka
  */
-public class DBContext {
+public class DBContext 
+{
     private static Connection connection;
     
     public static void setConnection(Connection c)

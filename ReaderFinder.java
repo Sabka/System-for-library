@@ -103,6 +103,12 @@ public class ReaderFinder
         return false;
     }
 
+    
+    /**
+     * return how many readers is in DB
+     * @return number of readers
+     * @throws java.sql.SQLException
+    */
     public int countAll() throws SQLException 
     {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT count(*) FROM readers")) {

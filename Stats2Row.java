@@ -3,6 +3,7 @@ package STATS;
 /**
  *
  * @author sabinka
+ * contains 1 row of result of delay stats
  */
 public class Stats2Row 
 {

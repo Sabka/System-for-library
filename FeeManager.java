@@ -89,7 +89,6 @@ public class FeeManager
                     s.setTimestamp(8, getEarlierTimestamp(date, 29));
                     s.setTimestamp(9, getEarlierTimestamp(date, 29));
                     
-                    //System.out.println(s);
 
                    try (ResultSet r = s.executeQuery()) 
                     {
@@ -107,10 +106,6 @@ public class FeeManager
 
                         }
                         
-                    }
-                    catch(Exception e)
-                    {
-                        System.err.println(e);
                     }
                     return res;
             }

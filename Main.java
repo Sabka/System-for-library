@@ -1,20 +1,9 @@
 package MAIN;
 
 import UI.MainMenu;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import org.postgresql.ds.PGSimpleDataSource;
 
 
@@ -30,7 +19,6 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-        //System.out.println("123");
         PGSimpleDataSource ds = new PGSimpleDataSource();
         ds.setServerName("db.dai.fmph.uniba.sk");
         ds.setDatabaseName("playground");

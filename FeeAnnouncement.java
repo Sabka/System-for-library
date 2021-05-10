@@ -54,11 +54,5 @@ public class FeeAnnouncement
     public String toString() {
         return "[[FeeAnnouncement for reader" + readerId + ", copy" + copyId + " hadnt been returned in time. You have new unpayed fee:" + amount + "euros]]";
     }
-
-    
-    
-    
-    
-    
-    
+ 
 }

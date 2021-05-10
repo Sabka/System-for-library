@@ -71,7 +71,7 @@ public class Rental
     }
     
     /**
-    * set dateTo based on book category and dateFrom
+     * set dateTo based on book category and dateFrom
      * @throws java.sql.SQLException
     */
     public void autosetDateTo() throws SQLException

@@ -74,9 +74,9 @@ public class Reservation
     }
     
     /**
-    * set dateTo based on dateFrom, dateTo = dateFrom + 3 days
+     * set dateTo based on dateFrom, dateTo = dateFrom + 3 days
      * @throws java.sql.SQLException
-    */
+     */
     public void autosetDateTo() throws SQLException
     {
         dateTo = new Timestamp(dateFrom.getTime() + (3 * 24 * 60 * 60 * 1000));

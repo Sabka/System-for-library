@@ -35,9 +35,6 @@ public class Category
         this.period = period;
     }
 
-
-    
-    
     @Override
     public String toString() {
         return "Category{" + "id=" + id + ", catName=" + catName + ", period=" + period + '}';

@@ -50,7 +50,7 @@ public class ReservationFinder
     }
     
     /**
-    * find active reservation of reader
+     * find active reservation of reader
      * @param rId - reader id
      * @return list of active reservations of a reader
      * @throws java.sql.SQLException
@@ -86,10 +86,10 @@ public class ReservationFinder
     
     
     /**
-    * find all active reservation
+     * find all active reservations whose copies are not in library yet
      * @return list of found reservations
      * @throws java.sql.SQLException
-    */
+     */
     public List<Reservation> findAllActiveReservationsWithUndeliveredCopies() throws SQLException 
     {
         List<Reservation> res = new ArrayList();
@@ -119,7 +119,7 @@ public class ReservationFinder
     
     
     /**
-     *  find reservation by id
+     * find reservation by id
      * @param id - id of a reservation
      * @return instance of reservation or null if not exists 
      * @throws java.sql.SQLException

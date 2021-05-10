@@ -91,11 +91,7 @@ public class Fee
                 id = r.getInt(1);
             }
         }
-        catch(Exception e)
-        {
-            System.err.println(e);
-        }
-       
+        
     }
     
     /**

@@ -15,7 +15,6 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.List;
 import org.postgresql.util.PSQLException;
 
 /**
@@ -41,6 +40,9 @@ public class ResRenManager
             try
             {
                 DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                // pri Repeatable Read sa moze zarezervovat rovnaka kopia pre roznych userov v rovnakom case
+                // = serializacna anomalia
+                // potrebujeme SERIALIZABLE
                 DBContext.getConnection().setAutoCommit(false);
                  // check reader
                 if(!InputChecker.checkReader(readerId))
@@ -116,7 +118,9 @@ public class ResRenManager
         {
             try
             {
-                DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+                // nestaci RC, lebo ak by si v rovnakom case reader poziciaval rovnaku reservation, vzniknu 2 rentals tej istehj kopie
+                // RR staci, lebo serializacna anomalia nenastava
                 DBContext.getConnection().setAutoCommit(false);
                  // check reader
                 if(!InputChecker.checkReader(readerId))
@@ -128,6 +132,7 @@ public class ResRenManager
                 {
                     throw new Exception("Your account is not valid yet.");
                 }
+                
                 if(ReaderFinder.getINSTANCE().hasOpenedFees(readerId))
                 {
                     throw new Exception("You have unpayed fees.");
@@ -214,7 +219,11 @@ public class ResRenManager
         {
             try
             {
-                DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+                // opat ak uvazujeme, ze by 1 reader vracal rovnaku knihu na 2 miestach naraz, 
+                // nestaci RC, ale treba RR, aby mu nemohli vzniknut 2 poplatky
+                // RR odchyti, ze sa nieco updatlo co som uz citala a snazi sa opakovat, 
+                //ale throwne, ze uz bola vratena
                 DBContext.getConnection().setAutoCommit(false);
 
                 if(!InputChecker.checkReader(readerId))
@@ -228,6 +237,9 @@ public class ResRenManager
                 }
 
                 Rental r = RentalFinder.getINSTANCE().findById(rId);
+                if(!r.getReaderId().equals(readerId)) throw new Exception("This is not your rental.");
+                if(r.getReturned() != null) throw new Exception("Book has been already returned.");
+                    
                 Copy c = CopyFinder.getINSTANCE().findById(r.getCopyId());
                 Fee res = null;
 
@@ -246,8 +258,8 @@ public class ResRenManager
                 }
 
                 // dummy nacitavanie pre ucely testovania serializacie
-                //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                //br.readLine();
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                br.readLine();
 
                 // everything ok, update rental
                 r.setReturned(new Timestamp(System.currentTimeMillis()));
@@ -270,7 +282,7 @@ public class ResRenManager
             {
                 DBContext.getConnection().commit();
                 DBContext.getConnection().setAutoCommit(true);
-                DeliveryManager.manageReturned();
+                //DeliveryManager.manageReturned();
             }
         }
         throw new Error("Something went wong, please try again");

@@ -679,11 +679,12 @@ public class MainMenu extends Menu {
         if(lb.isEmpty()) System.out.println("No stock found");
         else
         {
-            System.out.println(lb.size() + " stocks found");
+            
             for(int i=0; i<min(50, lb.size()); i++)
             {
                 System.out.println(lb.get(i));
             }
+            System.out.println(lb.size() + " stocks found");
         }
         
     }
@@ -970,6 +971,9 @@ public class MainMenu extends Menu {
         });
     }
 
+    /**
+     * Deliver reserved books to library and return books to stocks.
+     */
     private void bookDeliv() 
     {
         try
