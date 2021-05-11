@@ -47,6 +47,7 @@ public class Stats
                 );
         p.setInt(1, year);
         p.setInt(2, year);
+        System.out.println(p);
         ResultSet r = p.executeQuery();
         
         List<Stat1Row> res = new ArrayList();

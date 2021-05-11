@@ -939,7 +939,15 @@ public class MainMenu extends Menu {
         switch (confirmation.trim()) 
         {
             case "T":
-                FeeManager.payFees(valid);
+                try
+                {
+                    FeeManager.payFees(valid, readerId);
+                }
+                catch(Exception e)
+                {
+                    System.out.println(e.getMessage());
+                    return;
+                }
                 System.out.println("Fees were succesfully payed.");
                 break;
             case "F":

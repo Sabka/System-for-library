@@ -3,6 +3,8 @@ package TS;
 
 import MAIN.DBContext;
 import RDG.Fee;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,6 +52,10 @@ public class FeeManager
             {
                 DBContext.getConnection().setAutoCommit(false);
                 DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                // v zadani je ze predpokladame, ze operacia je spustena na konci dna
+                // to je neskor ako posledna moznost knihu v dany den vratit
+                // takze pocas transakcie predpokladam, ze sa uz data nemenia, 
+                // lebo pracuje s datami z minulosti na zaklade ich datumu
 
                 List<FeeAnnouncement> res = new ArrayList();
                 PreparedStatement s = DBContext.getConnection().prepareStatement
@@ -126,16 +132,34 @@ public class FeeManager
     /**
     * transaction for paying entered fees
      * @param fees - get list of fees to become payed
+     * @param rID - readers id - to prevent wrong fee ids
      * @throws java.sql.SQLException
     */
-    public static void payFees(List<Fee> fees) throws SQLException
+    public static void payFees(List<Fee> fees, int rID) throws SQLException, Exception
     {
+        // podla mna to nema zmysel opakovat, ked sa nieco zmeni, lebo tym sa zrejme 
+        // zmeni aj suma ktoru ma reader zaplatit, 
+        // a teda opakovanie by bolo bud neuspesne alebo
+        // nekonzistentne s touto sumou
         try
         {
-            DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            DBContext.getConnection().setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+            // keby na 2 miestach platil reader rovnaky fee, tak nechceme, aby obe zbehli
             DBContext.getConnection().setAutoCommit(false);
-            for(Fee f:fees) f.pay();
+            for(Fee f:fees)
+            {
+                //dummy nacitavanie pre ucely testovania serializacie
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                br.readLine();
+                if(f.getReaderId() != rID) throw new Exception("fee " + f.getId() + "does not belogs to reader" + rID);
+                if(f.isClosed()) throw new Exception("fee " + f.getId() + "has been already payed. Run oparation again.");
+                f.pay();
+            }
             
+        }
+        catch(PSQLException e)
+        {
+            throw new Exception("Something went wrong, please try again.");
         }
         finally
         {
