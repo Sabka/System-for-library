@@ -103,8 +103,9 @@ public class DeliveryManager
                         if(tmp_c.isAvailable())
                         {
                             //dummy nacitavanie pre ucely testovania serializacie
-                            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                            br.readLine();
+                            //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                            //br.readLine();
+                            
                             // tu sa moze kopia rezervovat a nema sa poslat - potrebujeme zatranit nonRR
                             tmp_c.setInLibrary(false); // magicky presun do skladu
                             tmp_c.update();

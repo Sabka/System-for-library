@@ -1,3 +1,5 @@
+-------------------------------------------TABLES----------------------------------------------
+
 drop table if exists authors cascade;
 create table authors
 (
@@ -95,73 +97,7 @@ create table rentals
     
 );
 
-drop index if exists res_from;
-create index res_from on reservations(date_from);
-
-
-drop function if exists is_avail_today;
-CREATE FUNCTION is_avail_today(b_id integer, t timestamp without time zone) returns table (num bigint) LANGUAGE SQL AS
-$$
-	select count(id) from copies where book_id = $1 
-		and id not in (select copy_id from reservations where date_from <= $2 and date_to >= $2)
-        	and id not in (select copy_id from rentals where date_from <= $2 and returned is null);
-$$;
-
-drop function if exists num(integer, integer);
-CREATE FUNCTION num(b_id integer, year integer) returns table (res bigint) LANGUAGE SQL AS
-$$
-	select count(i)
-	from 
-		(select i, is_avail_today(b_id, i) 
-		from generate_series
-			(TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*(year-2000), 
-			TIMESTAMP '2000-12-31 00:00:00'+ INTERVAL '1 year'*(year-2000), 
-			INTERVAL '1 day') as seq(i)) as tmp
-	where is_avail_today > 0
-$$;
-
-
-DROP FUNCTION if exists current_year_records;
-CREATE function current_year_records(y integer)
-RETURNS table (copy_id integer,  date_from timestamp, date_to timestamp, typ varchar)
-LANGUAGE SQL STABLE AS
-$$
-    (
-    
-    select copy_id, date_from, date_to, 'res' from reservations 
-    where 
-    date_from BETWEEN 
-    TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*($1-2000) and TIMESTAMP '2000-12-31 24:00:00'+ INTERVAL '1 year'*($1-2000)
-    or 
-    date_to BETWEEN 
-    TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*($1-2000) and TIMESTAMP '2000-12-31 24:00:00'+ INTERVAL '1 year'*($1-2000)
-
-
-    UNION  
-
-    select copy_id, date_from, returned, 'renNOTNULL' from rentals
-    where returned is not null
-    and
-    (
-    (date_from BETWEEN 
-    TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*($1-2000) and TIMESTAMP '2000-12-31 24:00:00'+ INTERVAL '1 year'*($1-2000))
-    or 
-    (returned BETWEEN 
-    TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*($1-2000) and TIMESTAMP '2000-12-31 24:00:00'+ INTERVAL '1 year'*($1-2000))
-    )
-
-
-    UNION
-
-    select copy_id, date_from, returned, 'renNULL' from rentals
-    where returned is null
-    and date_from >= TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*($1-2000)
-    and date_from < TIMESTAMP '2000-12-31 24:00:00'+ INTERVAL '1 year'*($1-2000)
-    
-    )
-    
-$$;
-
+-------------------------------INDICES------------------------------------------
 
 drop index if exists res_dates;
 create index res_dates on reservations(date_from, date_to);
@@ -169,12 +105,7 @@ create index res_dates on reservations(date_from, date_to);
 drop index if exists ren_dates;
 create index ren_dates on rentals(date_from, date_to);
 
-
-
-
--------------------------------------------------------------
-
-
+drop index if exists res_copy;
 create index res_copy on reservations(copy_id);
 
 drop index if exists ren_copy;
@@ -182,6 +113,36 @@ create index ren_copy on rentals(copy_id);
 
 drop index if exists cpy_to_book;
 create index cpy_to_book on  copies(book_id);
+
+drop index if exists ren_df;
+create index ren_df on rentals(date_from);
+
+drop index if exists ren_dt;
+create index ren_dt on rentals(date_to);
+
+drop index if exists ren_ret;
+create index ren_ret on rentals(returned);
+
+drop index if exists res_df;
+create index res_df on reservations(date_from);
+
+drop index if exists res_dt;
+create index res_dt on reservations(date_to);
+
+drop index if exists ren_cpy;
+create index ren_cpy on rentals(copy_id);
+
+drop index if exists res_cpy;
+create index res_cpy on reservations(copy_id);
+
+
+drop index if exists res_from;
+create index res_from on reservations(date_from);
+
+
+---------------------------------FUNCTIONS------------------------------------------
+
+
 
 -- vrati 0 ak kopia je volna - vyuziva index na copy id
 drop function if exists num_res_ren_violates_cpy(copy_id int, t timestamp) ;
@@ -224,34 +185,5 @@ $$
     where book_id = $1 and num_res_ren_violates_cpy(id, t) = 0;
     
 $$;
-
-
--- dostanem knihu a rok vratim kolko dni v danom roku bola dostupna
-drop function num_days_book_avail(b_id int, year int);
-create function num_days_book_avail(b_id int, year int) returns int language sql as
-$$
-    select count(i)::int
-    from generate_series
-        (TIMESTAMP '2000-01-01 00:00:00'+ INTERVAL '1 year'*($2-2000),  -- 2021 za vstupny year
-        TIMESTAMP '2000-12-31 00:00:00'+ INTERVAL '1 year'*($2-2000), 
-        INTERVAL '1 day') as seq(i)
-    where num_avail_cpy_of_book($1, i) > 0; 
-$$;
-
-
-create index ren_df on rentals(date_from);
-
-create index ren_dt on rentals(date_to);
-
-create index ren_ret on rentals(returned);
-
-create index res_df on reservations(date_from);
-
-create index res_dt on reservations(date_to);
-
-
-create index ren_cpy on rentals(copy_id);
-
-create index res_cpy on reservations(copy_id);
 
 
