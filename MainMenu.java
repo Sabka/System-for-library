@@ -561,6 +561,11 @@ public class MainMenu extends Menu {
         
         System.out.println("Copy "+ id +" has been succesfully reserved.");
         
+        if(CopyFinder.getINSTANCE().findById(id).isInLibrary())
+        {
+            System.out.println(new Announcement(readerId, id));
+        }
+        
         // prines knihy do kniznice a vypis oznamenia
         try
         {

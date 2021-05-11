@@ -86,12 +86,10 @@ public class Copy
             s.setInt(1, id);
             s.setDouble(2, CRITICAL_STATE);
             s.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-            System.err.println(s);
             try (ResultSet r = s.executeQuery()) 
             {
                 r.next();
                 cnt = r.getInt(1);
-                System.err.println(id + " " + cnt);
             }
         }
         return cnt > 0;
