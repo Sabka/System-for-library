@@ -30,8 +30,8 @@ public class ResRenManager
      * @param readerId
      * @param bId - book id
      * @return reserved copy id
-     * @throws java.sql.SQLException
-     * @throws java.lang.Exception
+     * @throws java.sql.SQLException  - incorrect query
+     * @throws java.lang.Exception - message for user
     */
     public static int createReservation(int readerId, int bId) throws SQLException, Exception 
     {
@@ -109,8 +109,8 @@ public class ResRenManager
      * @param readerId
      * @param rId - reservation id
      * @return timestamp - date_to of reservation
-     * @throws java.sql.SQLException
-     * @throws java.lang.Exception
+     * @throws java.sql.SQLException  - incorrect query
+     * @throws java.lang.Exception - message for user
     */  
     public static Timestamp getReservedBooks(int readerId, int rId) throws SQLException, Exception
     {
@@ -211,7 +211,8 @@ public class ResRenManager
      * @param rId - id of a rental
      * @param state - state of a copy (%)
      * @return instance of fee - if copy was damaged, else null
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
+     * @throws Exception - message for user
     */
     public static Fee returnBook(int readerId, int rId, double state) throws SQLException, Exception
     {

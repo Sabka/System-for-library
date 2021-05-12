@@ -72,7 +72,7 @@ public class Rental
     
     /**
      * set dateTo based on book category and dateFrom
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
     */
     public void autosetDateTo() throws SQLException
     {
@@ -95,7 +95,7 @@ public class Rental
     
     /**
      * Insert new row to table rentals in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void insert() throws SQLException
     {
@@ -118,7 +118,7 @@ public class Rental
 
     /**
      * Update row in table rentals in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -139,7 +139,7 @@ public class Rental
 
     /**
      * Delete row from table rentals in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void delete() throws SQLException {
         if (id == null) {
@@ -157,9 +157,5 @@ public class Rental
     public String toString() {
         return "Rentals{" + "id=" + id + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo + ", returned=" + returned + ", readerId=" + readerId + ", copyId=" + copyId + '}';
     }
-    
-    
-    
-    
-    
+ 
 }

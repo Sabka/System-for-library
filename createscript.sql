@@ -129,17 +129,6 @@ create index res_df on reservations(date_from);
 drop index if exists res_dt;
 create index res_dt on reservations(date_to);
 
-drop index if exists ren_cpy;
-create index ren_cpy on rentals(copy_id);
-
-drop index if exists res_cpy;
-create index res_cpy on reservations(copy_id);
-
-
-drop index if exists res_from;
-create index res_from on reservations(date_from);
-
-
 ---------------------------------FUNCTIONS------------------------------------------
 
 

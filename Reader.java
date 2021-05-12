@@ -54,7 +54,7 @@ public class Reader
 
     /**
      * Insert new row to table readers in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void insert() throws SQLException
     {
@@ -73,7 +73,7 @@ public class Reader
 
     /**
      * Update row in table readers in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -92,7 +92,7 @@ public class Reader
 
     /**
      * Delete row from table books in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void delete() throws SQLException {
         if (id == null) {

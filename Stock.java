@@ -31,7 +31,7 @@ public class Stock
 
     /**
      * Insert new row to table stocks in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void insert() throws SQLException
     {
@@ -48,7 +48,7 @@ public class Stock
 
     /**
      * Update row in table stocks in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -64,7 +64,7 @@ public class Stock
 
     /**
      * Delete row from table stocks in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void delete() throws SQLException {
         if (id == null) {
@@ -82,8 +82,5 @@ public class Stock
     public String toString() {
         return "Stock{" + "id=" + id + ", adress=" + adress + '}';
     }
-
-    
-    
     
 }

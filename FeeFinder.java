@@ -30,7 +30,7 @@ public class FeeFinder
     * find and return fee with id
     * @param id id of a copy
     * @return instance of found fee, null if fee with entered id does not exists
-    * @throws java.sql.SQLException
+    * @throws java.sql.SQLException - incorrect query
     */
     public Fee findById(int id) throws SQLException {
 
@@ -61,11 +61,11 @@ public class FeeFinder
     
     
     /**
-    * find all active fees of reader
-    * @param rId id of a reader
+     * find all active fees of reader
+     * @param rId id of a reader
      * @return list of fees
-     * @throws java.sql.SQLException
-    */
+     * @throws java.sql.SQLException - incorrect query
+     */
     public List<Fee> findUnpayedByReaderID(int rId) throws SQLException
     {
         List<Fee> res = new ArrayList();
@@ -96,7 +96,7 @@ public class FeeFinder
     /**
     * find all fees
     * @return list of fees
-    * @throws java.sql.SQLException
+    * @throws java.sql.SQLException  - incorrect query
     */
     public List<Fee> findAll() throws SQLException
     {

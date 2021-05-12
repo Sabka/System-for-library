@@ -30,7 +30,5 @@ public class Author
     {
         return "Author{" + "id=" + id + '}';
     }
-        
-        
-        
+     
 }

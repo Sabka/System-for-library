@@ -22,7 +22,7 @@ public class StockFinder
      * find and return stock in DB by its id
      * @param id - stock id
      * @return instance of stock/ null if not exists
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public Stock findById(int id) throws SQLException {
 
@@ -50,7 +50,7 @@ public class StockFinder
     /**
      * find all stocks in DB
      * @return list of found stocks
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public List<Stock> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM stocks")) {

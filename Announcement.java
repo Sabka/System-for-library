@@ -37,7 +37,5 @@ public class Announcement
     public String toString() {
         return "[[Announcement for reader " + getReaderId() + ": Copy with id " + getCopyId() + " has been delivered to library.]]";
     }
-    
-    
-    
+ 
 }

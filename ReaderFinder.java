@@ -28,7 +28,7 @@ public class ReaderFinder
      * find and return reader by its id
      * @param id - reader id
      * @return instance of reader, null if reader with entered id does not exists
-     * @throws java.sql.SQLException 
+     * @throws java.sql.SQLException  - incorrect query
      */
     public Reader findById(int id) throws SQLException {
 
@@ -59,7 +59,7 @@ public class ReaderFinder
     /**
      * find all readers in DB
      * @return list of found readers
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public List<Reader> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM readers LIMIT 50")) {
@@ -87,7 +87,7 @@ public class ReaderFinder
     * check whether reader with this id has unpayed fees
      * @param id - id of a reader
      * @return true/false whether reader with this id has unpayed fees
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
     */
     public boolean hasOpenedFees(int id) throws SQLException
     {
@@ -107,7 +107,7 @@ public class ReaderFinder
     /**
      * return how many readers is in DB
      * @return number of readers
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
     */
     public int countAll() throws SQLException 
     {

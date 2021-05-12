@@ -19,7 +19,7 @@ public class Stats
     * count bookAvailabilityStats and return list of Stat1Rows with counted stats
      * @param year
      * @return list of stat1rows with info about each book availability in entered year
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
     */
     public static List<Stat1Row> bookAvailability(int year) throws SQLException
     {
@@ -66,7 +66,7 @@ public class Stats
     * find difference between real state and state with increased rental periods, increase from interval 1, n
      * @param n
      * @return list of stat2rows with info about delayStats from 1 to entered N
-     * @throws java.sql.SQLException 
+     * @throws java.sql.SQLException  - incorrect query
     */
     public static List<Stats2Row> getDelayStats(int n) throws SQLException 
     {

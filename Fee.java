@@ -65,7 +65,7 @@ public class Fee
     
     /**
      * Insert new row to table fees in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void insert() throws SQLException
     {
@@ -96,7 +96,7 @@ public class Fee
     
     /**
      * Update row in table reservations in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void update() throws SQLException{
         if (id == null) 
@@ -116,7 +116,7 @@ public class Fee
     
     /**
      *  Fee was payed, update its row in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void pay() throws SQLException 
     {

@@ -22,7 +22,7 @@ public class RentalFinder
     /**
      *  find all rentals in DB
      * @return list of found rentals
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public List<Rental> findAll() throws SQLException {
         try (PreparedStatement s = DBContext.getConnection().prepareStatement("SELECT * FROM rentals")) {
@@ -52,7 +52,7 @@ public class RentalFinder
      *  find all active rentals of a reader
      * @param rId - reader id
      * @return list of found rentals
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public List<Rental> findReadersActiveRentals(int rId) throws SQLException
     {
@@ -85,7 +85,7 @@ public class RentalFinder
      *  find rental by its id
      * @param rId
      * @return found rental/ null if not exists
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public Rental findById(int rId) throws SQLException 
     {

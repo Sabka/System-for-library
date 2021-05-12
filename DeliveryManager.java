@@ -23,8 +23,8 @@ public class DeliveryManager
     /**
     * send all reserved copies to library
      * @return list of announcements for readers
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
+     * @throws java.sql.SQLException - message for user
+     * @throws java.io.IOException  - incorrect query
     */
     public static List<Announcement> manageReservations() throws SQLException, IOException, Exception
     {
@@ -82,7 +82,8 @@ public class DeliveryManager
     
     /**
     * send all returned copies to stocks
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException  - incorrect query
+     * @throws java.io.IOException - message for user
     */
     public static void manageReturned() throws SQLException, IOException 
     {

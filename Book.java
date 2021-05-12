@@ -45,7 +45,7 @@ public class Book
 
     /**
      * Insert new row to table books in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void insert() throws SQLException
     {
@@ -71,8 +71,8 @@ public class Book
     }
 
     /**
-     * Update row in table books in DB.
-     * @throws java.sql.SQLException
+     * Update row in table books in DB. 
+     * @throws java.sql.SQLException - incorrect query
      */
     public void update() throws SQLException {
         if (id == null) {
@@ -104,7 +104,7 @@ public class Book
 
     /**
      * Delete row from table books in DB.
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
      */
     public void delete() throws SQLException {
         if (id == null) {
@@ -123,9 +123,5 @@ public class Book
         return "Book{" + "id=" + id + ", title=" + title + ", authors=" + authors + '}';
     }
 
-    
-    
-    
-    
     
 }

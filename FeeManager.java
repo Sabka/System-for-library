@@ -42,9 +42,10 @@ public class FeeManager
     * create fees for readers who hadn't returned rented books in time 
      * @param date - date of check
      * @return list of announcements for readers
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
+     * @throws Exception - message for user
     */
-    public static List<FeeAnnouncement> feesForNotReturnedCopies(Timestamp date) throws SQLException,Exception
+    public static List<FeeAnnouncement> feesForNotReturnedCopies(Timestamp date) throws SQLException, Exception
     {
         for(int i=0; i< 10; i++)
         {
@@ -133,7 +134,8 @@ public class FeeManager
     * transaction for paying entered fees
      * @param fees - get list of fees to become payed
      * @param rID - readers id - to prevent wrong fee ids
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException - incorrect query
+     * @throws Exception - message for user
     */
     public static void payFees(List<Fee> fees, int rID) throws SQLException, Exception
     {
@@ -172,7 +174,7 @@ public class FeeManager
     * count summary amount of fees reader want to pay
      * @param readersFees - readers actual fees
      * @return sum
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception - message for user
     */
     public static double countSum(List<Fee> readersFees) throws Exception
     {
